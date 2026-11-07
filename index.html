@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#04050a">
+<title>SONOVA — The Sound That Listens Back</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   DESIGN TOKENS (ปรับขนาดตามหน้าจออัตโนมัติด้วย clamp)
+   ========================================================= */
+:root{
+  --bg:#04050a;--gold:#d4b37a;--gold2:#f3dfb0;--cyan:#6ee7ff;--violet:#9b7bff;--rose:#ff6b8b;--green:#5ef2b0;
+  --text:#e8e6f0;--muted:#8d8ba6;--line:rgba(212,179,122,.18);
+  --pad:clamp(16px,4vw,28px);
+  --sec:clamp(80px,11vw,140px);
+  --nav-h:76px;
+  --lab-h:clamp(560px,74vh,780px);
+  --radius:clamp(14px,2vw,20px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter','Noto Sans Thai',sans-serif;line-height:1.75;overflow-x:hidden;overflow-x:clip;font-weight:300;font-size:16px}
+body::before{content:'';position:fixed;inset:0;z-index:-2;
+  background:radial-gradient(60vmax 60vmax at 85% -10%,rgba(155,123,255,.13),transparent 60%),
+             radial-gradient(50vmax 50vmax at -10% 30%,rgba(110,231,255,.08),transparent 60%),
+             radial-gradient(70vmax 50vmax at 50% 120%,rgba(212,179,122,.08),transparent 60%)}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.06;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+img,svg,canvas{max-width:100%}
+.container{max-width:1260px;margin:0 auto;padding-left:max(var(--pad),env(safe-area-inset-left));padding-right:max(var(--pad),env(safe-area-inset-right))}
+.section{padding:var(--sec) 0;position:relative}
+section[id],#lab,.info{scroll-margin-top:calc(var(--nav-h) + 10px)}
+
+/* ================= NAV ================= */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .4s,border-color .4s;padding-top:env(safe-area-inset-top);border-bottom:1px solid transparent}
+nav.scrolled,body.menu-open nav{background:rgba(4,5,10,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:rgba(255,255,255,.05)}
+nav .container{display:flex;align-items:center;justify-content:space-between;height:var(--nav-h)}
+.logo{font-family:'Cinzel';letter-spacing:.42em;font-weight:600;font-size:clamp(15px,1.6vw,18px);display:flex;align-items:center;gap:12px}
+.sigil{width:26px;height:26px;border:1px solid var(--gold);border-radius:50%;position:relative;flex:none}
+.sigil::before,.sigil::after{content:'';position:absolute;inset:5px;border:1px solid var(--cyan);border-radius:50%}
+.sigil::after{inset:10px;background:var(--gold);border:0;box-shadow:0 0 12px var(--gold)}
+.nav-links{display:flex;gap:clamp(18px,2.6vw,34px);font-size:13px;letter-spacing:.12em;color:var(--muted)}
+.nav-links a{transition:color .3s}
+.nav-links a:hover{color:var(--gold2)}
+.burger{display:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(5,6,11,.5);position:relative}
+.burger span{position:absolute;left:13px;right:13px;height:1px;background:var(--gold2);transition:.35s}
+.burger span:first-child{top:18px}.burger span:last-child{top:25px}
+body.menu-open .burger span:first-child{top:21.5px;transform:rotate(45deg)}
+body.menu-open .burger span:last-child{top:21.5px;transform:rotate(-45deg)}
+.mnav{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3.5vh,28px);
+  background:rgba(4,5,10,.95);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s;padding:calc(var(--nav-h) + env(safe-area-inset-top)) 24px 40px}
+.mnav a{font-family:'Cinzel';font-size:clamp(20px,6vw,32px);letter-spacing:.22em;color:var(--text);opacity:0;transform:translateY(16px);transition:.5s}
+.mnav a small{display:block;text-align:center;font-family:'Noto Sans Thai';font-size:12px;letter-spacing:.1em;color:var(--muted)}
+.mnav a:active{color:var(--gold2)}
+body.menu-open{overflow:hidden}
+body.menu-open .mnav{opacity:1;visibility:visible}
+body.menu-open .mnav a{opacity:1;transform:none}
+body.menu-open .mnav a:nth-child(2){transition-delay:.05s}body.menu-open .mnav a:nth-child(3){transition-delay:.1s}
+body.menu-open .mnav a:nth-child(4){transition-delay:.15s}body.menu-open .mnav a:nth-child(5){transition-delay:.2s}
+
+/* ================= COMMON ================= */
+.kicker{font-family:'Cinzel';letter-spacing:.35em;font-size:clamp(10.5px,1vw,12px);color:var(--gold);display:flex;align-items:center;gap:14px;text-transform:uppercase}
+.kicker::before{content:'';width:clamp(24px,4vw,42px);height:1px;background:linear-gradient(90deg,transparent,var(--gold));flex:none}
+.title{font-family:'Cinzel','Noto Sans Thai',serif;font-weight:600;font-size:clamp(26px,4.2vw,54px);line-height:1.3;margin:clamp(12px,1.6vw,18px) 0;
+  background:linear-gradient(180deg,#fff 10%,#b9a37d);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--muted);max-width:760px;font-size:clamp(15px,.6vw + 11px,17px)}
+.glass{background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative}
+.ornate::before,.ornate::after{content:'';position:absolute;width:18px;height:18px;border:1px solid var(--gold);opacity:.6;pointer-events:none}
+.ornate::before{top:-1px;left:-1px;border-right:0;border-bottom:0;border-top-left-radius:var(--radius)}
+.ornate::after{bottom:-1px;right:-1px;border-left:0;border-top:0;border-bottom-right-radius:var(--radius)}
+.btn{padding:14px 26px;min-height:48px;border-radius:999px;font-size:14px;letter-spacing:.06em;border:1px solid transparent;transition:.3s;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-align:center}
+.btn.gold{background:linear-gradient(135deg,#f3dfb0,#b38b4d);color:#120d05;font-weight:600;box-shadow:0 10px 40px -10px rgba(212,179,122,.6)}
+.btn.ghost{background:transparent;color:var(--text);border-color:rgba(255,255,255,.18)}
+@media(hover:hover){
+  .btn.gold:hover{transform:translateY(-2px);box-shadow:0 14px 50px -8px rgba(212,179,122,.8)}
+  .btn.ghost:hover{border-color:var(--gold);color:var(--gold2)}
+}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:0 auto;max-width:1200px}
+
+/* ================= HERO ================= */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:30px;padding-top:calc(var(--nav-h) + 20px);padding-bottom:60px}
+.hero h1{font-family:'Cinzel';font-weight:600;font-size:clamp(46px,9.5vw,148px);letter-spacing:.1em;line-height:1;margin:22px 0 10px;
+  background:linear-gradient(180deg,#fff6df 0%,#d4b37a 55%,#6b5432 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 40px rgba(212,179,122,.25))}
+.tagline{font-family:'Cinzel';letter-spacing:.3em;font-size:clamp(11px,1.2vw,14px);color:var(--cyan);margin-bottom:22px}
+.hero p.lead{font-size:clamp(15px,.8vw + 10px,18px)}
+.hero .cta{display:flex;gap:14px;margin:clamp(26px,3vw,38px) 0 clamp(30px,4vw,50px);flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:600px}
+.stat b{display:block;font-family:'Cinzel';font-size:clamp(22px,2.4vw,28px);color:var(--gold2);font-weight:600}
+.stat span{font-size:12px;color:var(--muted);line-height:1.4;display:block}
+.orb-wrap{position:relative;aspect-ratio:1;width:100%;max-width:620px;margin-left:auto}
+#orb{width:100%;height:100%;display:block}
+.ring-text{position:absolute;inset:0;width:100%;height:100%;animation:spin 60s linear infinite}
+.ring-text text{font-family:'Cinzel';font-size:13px;letter-spacing:6px;fill:rgba(212,179,122,.55)}
+.orb-core{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
+.orb-core div{font-family:'Cinzel';letter-spacing:.3em;font-size:clamp(10px,1vw,12px);color:var(--muted)}
+.orb-core strong{display:block;font-size:clamp(24px,3vw,34px);letter-spacing:.15em;color:#fff;font-weight:400;margin:6px 0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.3em;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:10px}
+.scroll-cue::after{content:'';width:1px;height:46px;background:linear-gradient(var(--gold),transparent);animation:cue 2s infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ================= LOOP ================= */
+.loop{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,1.6vw,20px);margin-top:clamp(36px,5vw,60px)}
+.loop .card{padding:clamp(24px,2.6vw,34px) clamp(20px,2.2vw,28px)}
+.numeral{font-family:'Cinzel';font-size:clamp(36px,3.6vw,46px);color:transparent;-webkit-text-stroke:1px var(--gold);line-height:1}
+.loop h3{font-family:'Cinzel','Noto Sans Thai';font-weight:600;margin:18px 0 4px;font-size:20px;letter-spacing:.06em}
+.loop .th{color:var(--cyan);font-size:13px;margin-bottom:12px}
+.loop p{color:var(--muted);font-size:14.5px}
+
+/* ================= 3D LAB ================= */
+.lab{display:grid;grid-template-columns:1fr 400px;gap:22px;margin-top:clamp(36px,4.5vw,56px)}
+.viewer{position:relative;height:var(--lab-h);border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,.07);background:#05060b;transition:border-color .4s,box-shadow .4s}
+.viewer.interacting{border-color:rgba(212,179,122,.6);box-shadow:0 0 0 1px rgba(212,179,122,.25),0 0 40px -10px rgba(212,179,122,.4)}
+#lab-canvas{position:absolute;inset:0}
+#lab-canvas canvas{display:block;width:100%!important;height:100%!important}
+.hotspots{position:absolute;inset:0;pointer-events:none}
+.hs{position:absolute;left:0;top:0;display:flex;align-items:center;gap:8px;background:none;border:0;color:#fff;opacity:0;transition:opacity .4s;margin:-13px 0 0 -13px;pointer-events:none;padding:2px}
+.viewer.show-hs .hs{pointer-events:auto}
+.hs span{width:24px;height:24px;border-radius:50%;border:1px solid var(--gold);background:rgba(5,6,11,.75);font-size:9px;display:grid;place-items:center;font-family:'Cinzel';animation:hsPulse 2.4s infinite;flex:none}
+.hs em{font-style:normal;font-size:11px;letter-spacing:.06em;padding:3px 9px;border-radius:6px;background:rgba(5,6,11,.8);border:1px solid rgba(255,255,255,.1);opacity:0;transform:translateX(-4px);transition:.3s;white-space:nowrap}
+.hs.active em{opacity:1;transform:none}
+@media(hover:hover){.hs:hover em{opacity:1;transform:none}}
+.hs.active span{background:var(--gold);color:#000}
+@keyframes hsPulse{0%,100%{box-shadow:0 0 0 0 rgba(212,179,122,.45)}50%{box-shadow:0 0 0 8px rgba(212,179,122,0)}}
+.modes{position:absolute;top:18px;left:18px;display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(5,6,11,.7);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:2}
+.modes button{background:none;border:0;color:var(--muted);padding:8px 16px;min-height:36px;border-radius:999px;font-size:12.5px;letter-spacing:.06em;transition:.3s;white-space:nowrap}
+.modes button.active{background:var(--gold);color:#120d05;font-weight:600}
+.zoom{position:absolute;top:18px;right:18px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.zoom button{width:40px;height:40px;border-radius:50%;background:rgba(5,6,11,.7);border:1px solid rgba(255,255,255,.1);color:var(--text);font-size:16px;display:grid;place-items:center}
+@media(hover:hover){.zoom button:hover{border-color:var(--gold);color:var(--gold)}}
+.viewer-hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:11.5px;color:var(--muted);letter-spacing:.08em;background:rgba(5,6,11,.6);padding:6px 14px;border-radius:999px;white-space:nowrap}
+.touch-gate{display:none;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:3;padding:10px 18px;min-height:42px;border-radius:999px;font-size:12.5px;letter-spacing:.04em;
+  background:rgba(5,6,11,.82);color:var(--gold2);border:1px solid rgba(212,179,122,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);white-space:nowrap}
+.viewer.interacting .touch-gate{background:var(--gold);color:#120d05;font-weight:600}
+.peek{display:none}
+.loading{position:absolute;inset:0;display:grid;place-items:center;font-family:'Cinzel';letter-spacing:.3em;font-size:12px;color:var(--gold);transition:opacity .8s;pointer-events:none;text-align:center;padding:20px}
+.info{padding:26px;height:var(--lab-h);overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain}
+.info::-webkit-scrollbar{width:6px}.info::-webkit-scrollbar-thumb{background:rgba(212,179,122,.3);border-radius:3px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.chip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);padding:6px 12px;min-height:32px;border-radius:999px;font-size:11.5px;transition:.25s;white-space:nowrap;flex:none}
+@media(hover:hover){.chip:hover{color:#fff;border-color:rgba(212,179,122,.5)}}
+.chip.active{background:rgba(212,179,122,.15);border-color:var(--gold);color:var(--gold2)}
+#info-body.fade{animation:fadeUp .6s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.i-no{font-family:'Cinzel';font-size:11px;letter-spacing:.3em;color:var(--accent,var(--gold))}
+.info h3{font-family:'Cinzel','Noto Sans Thai';font-size:clamp(21px,2vw,25px);font-weight:600;margin:6px 0 2px;line-height:1.3}
+.i-th{color:var(--accent,var(--cyan));font-size:14px;margin-bottom:14px}
+.info p{color:#bdbbd0;font-size:14.5px}
+.info h4{font-family:'Cinzel','Noto Sans Thai';font-size:12px;letter-spacing:.25em;color:var(--gold);margin:22px 0 10px;font-weight:600}
+.steps{list-style:none;counter-reset:st}
+.steps li{counter-increment:st;position:relative;padding:0 0 12px 36px;font-size:13.5px;color:#cfcde0;line-height:1.6}
+.steps li::before{content:counter(st);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;border:1px solid var(--accent,var(--gold));font-size:10.5px;display:grid;place-items:center;color:var(--accent,var(--gold));font-family:'Cinzel'}
+.steps li::after{content:'';position:absolute;left:11px;top:25px;bottom:2px;width:1px;background:rgba(255,255,255,.08)}
+.steps li:last-child::after{display:none}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.specs div{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 12px}
+.specs span{display:block;font-size:11px;color:var(--muted)}
+.specs b{font-weight:500;font-size:13.5px}
+.reset-link{margin-top:auto;padding-top:18px;font-size:12px;color:var(--muted);background:none;border:0;text-align:left;letter-spacing:.08em;min-height:40px}
+@media(hover:hover){.reset-link:hover{color:var(--gold)}}
+
+/* ================= ENGINE ================= */
+.modes-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:clamp(36px,4.5vw,56px)}
+.mode-card{padding:clamp(22px,3vw,38px)}
+.mode-card .badge{display:inline-block;font-family:'Cinzel';font-size:11px;letter-spacing:.3em;padding:5px 12px;border-radius:999px;border:1px solid;margin-bottom:18px}
+.mode-card h3{font-family:'Cinzel','Noto Sans Thai';font-size:clamp(23px,2.4vw,28px);font-weight:600;letter-spacing:.05em}
+.mode-card .sub{color:var(--muted);margin:6px 0 22px}
+.flow{list-style:none;display:flex;flex-direction:column;gap:10px}
+.flow li{display:flex;gap:14px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);font-size:14px;color:#cfcde0}
+.flow li i{font-style:normal;font-family:'Cinzel';font-size:12px;min-width:26px;color:var(--gold);padding-top:2px}
+.flow li b{color:#fff;font-weight:500}
+.note{margin-top:18px;font-size:12.5px;color:var(--muted);border-left:2px solid var(--gold);padding-left:12px}
+.waves{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:22px}
+.wave{padding:22px 18px;text-align:center}
+.wave .sym{font-family:'Cinzel';font-size:clamp(30px,3vw,38px);line-height:1}
+.wave h5{font-size:14px;margin:8px 0 2px;font-weight:600}
+.wave .hz{font-size:12px;color:var(--gold);letter-spacing:.08em}
+.wave p{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.player{margin-top:22px;padding:clamp(22px,2.6vw,30px);display:grid;grid-template-columns:auto 1fr;gap:clamp(18px,2.6vw,30px);align-items:center}
+.play{width:84px;height:84px;border-radius:50%;border:1px solid var(--gold);background:radial-gradient(circle,rgba(212,179,122,.25),transparent 70%);color:var(--gold2);font-size:26px;transition:.3s;flex:none}
+@media(hover:hover){.play:hover{box-shadow:0 0 40px rgba(212,179,122,.4)}}
+.play.on{background:var(--gold);color:#120d05}
+.beat-sel{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.beat-sel button{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--muted);padding:7px 15px;min-height:36px;border-radius:999px;font-size:12.5px}
+.beat-sel button.active{border-color:var(--cyan);color:var(--cyan);background:rgba(110,231,255,.08)}
+#viz{width:100%;height:80px;display:block}
+
+/* ================= LIVE ================= */
+.live{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;margin-top:clamp(36px,4.5vw,56px)}
+.eeg-card{padding:clamp(16px,2vw,22px);display:flex;flex-direction:column;min-width:0}
+.card-top{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.15em;color:var(--muted);margin-bottom:12px;text-transform:uppercase;flex-wrap:wrap}
+.card-top .r{margin-left:auto;color:var(--gold2);font-family:'Cinzel';letter-spacing:.1em}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--rose);box-shadow:0 0 10px var(--rose);animation:blink 1.2s infinite;flex:none}
+@keyframes blink{50%{opacity:.25}}
+#eeg{width:100%;height:440px;display:block;border-radius:12px;background:rgba(0,0,0,.3)}
+.ctrl{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.side{display:grid;gap:16px;grid-template-columns:1fr 1fr;align-content:start;min-width:0}
+.gauge-card{padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge{position:relative;width:140px;height:140px}
+.gauge svg{transform:rotate(-90deg)}
+.gauge .val{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.gauge .val b{font-family:'Cinzel';font-size:34px;font-weight:600;line-height:1}
+.gauge .val small{display:block;font-size:10px;letter-spacing:.2em;color:var(--muted)}
+.status{margin-top:12px;font-size:12.5px;padding:4px 12px;border-radius:999px;border:1px solid;text-align:center}
+.status.ok{color:var(--green);border-color:rgba(94,242,176,.4)}
+.status.warn{color:#ffd27a;border-color:rgba(255,210,122,.4)}
+.status.bad{color:var(--rose);border-color:rgba(255,107,139,.5)}
+.status.info{color:var(--cyan);border-color:rgba(110,231,255,.4)}
+.watch{padding:20px}
+.watch .lbl{font-size:11px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.watch .hr{display:flex;align-items:baseline;gap:8px;margin:8px 0}
+.watch .hr b{font-family:'Cinzel';font-size:40px;font-weight:600;line-height:1}
+.heart{color:var(--rose);font-size:20px;animation:beat .9s infinite;display:inline-block}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.3)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+.watch .row{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#cfcde0;padding:5px 0;border-top:1px solid rgba(255,255,255,.05)}
+.pipeline{grid-column:1/-1;padding:18px 20px}
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.stage{font-size:11.5px;text-align:center;padding:10px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.07);color:var(--muted);transition:.5s;line-height:1.4}
+.stage b{display:block;font-family:'Cinzel';font-size:15px;margin-bottom:2px}
+.stage.on{border-color:var(--gold);color:var(--gold2);background:rgba(212,179,122,.1);box-shadow:0 0 24px -6px rgba(212,179,122,.5)}
+.logbox{grid-column:1/-1;padding:18px 20px;min-height:200px}
+#log{list-style:none;font-size:12.5px;display:flex;flex-direction:column;gap:6px;margin-top:8px}
+#log li{animation:fadeUp .5s;color:#cfcde0;line-height:1.5}
+#log time{font-family:'Cinzel';color:var(--muted);margin-right:10px;font-size:11px}
+#log li.warn{color:#ffd27a}#log li.bad{color:var(--rose)}#log li.info{color:var(--cyan)}#log li.ok{color:var(--green)}#log li.muted{color:var(--muted)}
+.fusion{margin-top:22px;padding:clamp(20px,2.6vw,30px)}
+.formula{font-family:'Cinzel';text-align:center;font-size:clamp(13px,1.8vw,20px);letter-spacing:.04em;padding:clamp(12px,1.6vw,18px);border-radius:14px;background:rgba(0,0,0,.3);border:1px dashed var(--line);margin:14px 0 22px;color:var(--gold2);line-height:1.8}
+.formula span{display:inline-block;white-space:nowrap;margin:0 .2em}
+.rtable{width:100%;border-collapse:collapse;font-size:14px}
+.rtable th,.rtable td{text-align:left;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.rtable th{font-family:'Cinzel','Noto Sans Thai';font-size:11.5px;letter-spacing:.18em;color:var(--gold);font-weight:600}
+.rtable td{color:#cfcde0}
+.tag{font-size:11.5px;padding:3px 10px;border-radius:999px;border:1px solid;white-space:nowrap;display:inline-block}
+
+/* ================= ECOSYSTEM ================= */
+.eco{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:clamp(36px,4.5vw,56px)}
+.node{padding:clamp(22px,2.4vw,28px) 22px;text-align:center}
+.node .ic{width:64px;height:64px;margin:0 auto 14px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-family:'Cinzel';color:var(--gold2);font-size:12px;letter-spacing:.1em;background:radial-gradient(circle,rgba(212,179,122,.12),transparent 70%)}
+.node h4{font-family:'Cinzel','Noto Sans Thai';font-weight:600;font-size:16px}
+.node p{font-size:13px;color:var(--muted);margin-top:6px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.feat{padding:24px}
+.feat h5{font-size:15.5px;font-weight:600;margin-bottom:6px;color:var(--gold2)}
+.feat p{font-size:13.5px;color:var(--muted)}
+
+/* ================= SPECS ================= */
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 50px;margin-top:clamp(30px,4vw,50px)}
+.spec-row{display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14.5px}
+.spec-row span{color:var(--muted);flex:none}
+.spec-row b{font-weight:500;text-align:right}
+.privacy{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:clamp(40px,5vw,60px)}
+.disclaimer{margin-top:30px;padding:20px 24px;font-size:13px;color:var(--muted);border-left:2px solid var(--rose)}
+
+footer{padding:clamp(60px,8vw,90px) 0 calc(50px + env(safe-area-inset-bottom));text-align:center}
+footer .big{font-family:'Cinzel';font-size:clamp(34px,7vw,90px);letter-spacing:.2em;color:transparent;-webkit-text-stroke:1px rgba(212,179,122,.5)}
+footer p{color:var(--muted);font-size:13px;margin-top:14px}
+
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================= */
+
+/* จอใหญ่มาก (2K / 4K) */
+@media(min-width:1600px){
+  .container{max-width:1440px}
+  body{font-size:17px}
+  .lab{grid-template-columns:1fr 440px}
+}
+@media(min-width:2200px){
+  .container{max-width:1680px}
+  .lead{font-size:19px}
+  .loop p,.feat p,.node p,.flow li{font-size:15.5px}
+}
+
+/* แล็ปท็อปเล็ก */
+@media(max-width:1280px){
+  .lab{grid-template-columns:1fr 360px}
+  .waves{gap:10px}
+  .wave{padding:20px 12px}
+}
+
+/* แท็บเล็ต (แนวนอน/แนวตั้ง) */
+@media(max-width:1080px){
+  :root{--nav-h:68px}
+  .nav-links{display:none}
+  .burger{display:block}
+  .hero{grid-template-columns:1fr;gap:10px;padding-top:calc(var(--nav-h) + 40px);padding-bottom:90px}
+  .orb-wrap{margin:10px auto 0;max-width:min(460px,86vw)}
+  .lab,.live,.modes-grid{grid-template-columns:1fr}
+  .viewer{height:clamp(420px,62vw,600px)}
+  .info{height:auto;max-height:none;overflow:visible}
+  .loop,.eco,.privacy{grid-template-columns:1fr 1fr}
+  .waves{grid-template-columns:repeat(3,1fr)}
+  .features{grid-template-columns:1fr 1fr}
+  .peek{display:flex;position:absolute;top:70px;left:50%;transform:translate(-50%,-6px);z-index:3;align-items:center;gap:10px;padding:8px 8px 8px 16px;border-radius:999px;
+    background:rgba(5,6,11,.85);border:1px solid rgba(212,179,122,.45);color:var(--text);font-size:12.5px;opacity:0;pointer-events:none;transition:.35s;white-space:nowrap;max-width:calc(100% - 24px)}
+  .peek b{font-weight:500;overflow:hidden;text-overflow:ellipsis}
+  .peek span{background:var(--gold);color:#120d05;border-radius:999px;padding:4px 12px;font-weight:600;flex:none}
+  .peek.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+}
+
+/* อุปกรณ์จอสัมผัส */
+@media(pointer:coarse){
+  .viewer-hint{display:none}
+  .touch-gate{display:block}
+}
+
+/* แท็บเล็ตเล็ก / มือถือแนวนอน */
+@media(max-width:760px){
+  .spec-grid{grid-template-columns:1fr}
+  .player{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .player .kicker{justify-content:center}
+  .beat-sel{justify-content:center}
+  .rtable thead{display:none}
+  .rtable,.rtable tbody,.rtable tr,.rtable td{display:block;width:100%}
+  .rtable tr{border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:4px 16px;margin-bottom:12px;background:rgba(255,255,255,.02)}
+  .rtable td{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 0;text-align:right}
+  .rtable td::before{content:attr(data-label);color:var(--muted);font-size:12px;text-align:left;flex:none}
+  .rtable td:first-child{color:#fff;font-weight:500;justify-content:flex-start;text-align:left}
+  .rtable td:first-child::before{display:none}
+  .rtable td:last-child{border-bottom:0}
+  .tag{white-space:normal;text-align:center}
+}
+
+/* มือถือ */
+@media(max-width:560px){
+  :root{--nav-h:62px}
+  .logo{letter-spacing:.32em}
+  .hero{padding-top:calc(var(--nav-h) + 28px);padding-bottom:40px}
+  .hero .cta .btn{flex:1 1 100%}
+  .stats{grid-template-columns:1fr 1fr;gap:20px 14px}
+  .scroll-cue{display:none}
+  .loop,.privacy,.features,.side{grid-template-columns:1fr}
+  .waves{grid-template-columns:1fr 1fr}
+  .waves .wave:last-child{grid-column:1/-1}
+  .viewer{height:clamp(400px,118vw,540px);border-radius:18px}
+  .modes{top:10px;left:10px;right:10px;justify-content:space-between}
+  .modes button{flex:1;padding:8px 6px;font-size:12px}
+  .zoom{top:auto;bottom:12px;right:12px;flex-direction:row}
+  .zoom button{width:38px;height:38px}
+  .touch-gate{left:12px;transform:none;font-size:12px;padding:9px 14px}
+  .peek{top:62px}
+  .hs em{display:none}
+  .hs.active em{display:block}
+  .info{padding:20px}
+  .chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -20px 20px;padding:2px 20px 6px;scrollbar-width:none;scroll-snap-type:x proximity}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{scroll-snap-align:start;min-height:36px}
+  .flow li{padding:11px 12px;gap:10px;font-size:13.5px}
+  #eeg{height:clamp(280px,78vw,380px)}
+  .ctrl .btn{flex:1}
+  .gauge-card{flex-direction:row;gap:20px;justify-content:center}
+  .status{margin-top:0}
+  .card-top .r{margin-left:0;width:100%}
+  .feat{padding:20px}
+  .disclaimer{padding:16px 18px}
+}
+
+/* มือถือจอเล็กมาก */
+@media(max-width:400px){
+  .eco{grid-template-columns:1fr}
+  .stages{grid-template-columns:1fr 1fr}
+  .modes button{font-size:11.5px;padding:8px 4px}
+  .touch-gate{max-width:calc(100% - 150px);overflow:hidden;text-overflow:ellipsis}
+  .spec-row{flex-direction:column;gap:2px}
+  .spec-row b{text-align:left}
+  .gauge-card{flex-direction:column}
+  .gauge-card .status{margin-top:12px}
+}
+
+/* มือถือแนวนอน (จอเตี้ย) */
+@media(max-height:520px) and (orientation:landscape){
+  .hero{min-height:auto;grid-template-columns:1.2fr 1fr;padding-top:calc(var(--nav-h) + 30px)}
+  .orb-wrap{max-width:300px}
+  .scroll-cue{display:none}
+  .viewer{height:calc(100svh - var(--nav-h) - 30px);min-height:300px}
+  .mnav{justify-content:flex-start;overflow-y:auto}
+}
+
+/* ลดการเคลื่อนไหวสำหรับผู้ที่ตั้งค่าไว้ */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="container">
+    <a href="#top" class="logo"><span class="sigil"></span>SONOVA</a>
+    <div class="nav-links">
+      <a href="#loop">CONCEPT</a><a href="#lab">3D LAB</a><a href="#engine">SOUND ENGINE</a><a href="#live">BIOFEEDBACK</a><a href="#specs">SPECS</a>
+    </div>
+    <button class="burger" id="burger" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="mnav"><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mnav" id="mnav">
+  <a href="#loop">CONCEPT<small>แนวคิด</small></a>
+  <a href="#lab">3D LAB<small>ส่องภายในตัวเครื่อง</small></a>
+  <a href="#engine">SOUND ENGINE<small>ระบบเสียง AI</small></a>
+  <a href="#live">BIOFEEDBACK<small>ทดลองระบบ</small></a>
+  <a href="#specs">SPECS<small>ข้อมูลจำเพาะ</small></a>
+</div>
+
+<!-- HERO -->
+<header id="top" class="container hero">
+  <div class="reveal">
+    <div class="kicker">AI Generative Neuro-Audio</div>
+    <h1>SONOVA</h1>
+    <div class="tagline">THE SOUND THAT LISTENS BACK</div>
+    <p class="lead">หูฟังไร้สายที่อ่านคลื่นสมองของคุณแบบเรียลไทม์ ยืนยันความเครียดร่วมกับจังหวะหัวใจจาก Apple Watch แล้วให้ AI แต่งเพลงหรือเลือกท่อนเพลงโปรดของคุณ ฝังคลื่นเสียงบำบัดไว้แนบเนียนจนคุณไม่รู้ตัว รู้แค่ว่าใจค่อยๆ สงบลง</p>
+    <div class="cta">
+      <a href="#lab" class="btn gold">ส่องภายในตัวเครื่อง 3D</a>
+      <a href="#live" class="btn ghost">ทดลอง Biofeedback</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>6</b><span>ขั้ววัดคลื่นสมอง<br>ในจุกหูฟัง</span></div>
+      <div class="stat"><b>250ms</b><span>รอบการวิเคราะห์<br>สภาวะจิตใจ</span></div>
+      <div class="stat"><b>2×</b><span>สัญญาณยืนยัน<br>EEG + หัวใจ</span></div>
+      <div class="stat"><b>100%</b><span>ประมวลผล<br>บนตัวเครื่อง</span></div>
+    </div>
+  </div>
+  <div class="orb-wrap reveal">
+    <canvas id="orb"></canvas>
+    <svg class="ring-text" viewBox="0 0 400 400" aria-hidden="true"><defs><path id="circ" d="M200,200 m-178,0 a178,178 0 1,1 356,0 a178,178 0 1,1 -356,0"/></defs>
+      <text><textPath href="#circ" textLength="1110">SENSE ✦ CONFIRM ✦ COMPOSE ✦ HEAL ✦ SENSE ✦ CONFIRM ✦ COMPOSE ✦ HEAL ✦</textPath></text></svg>
+    <div class="orb-core"><div>β → α<strong>CALM</strong>NEURAL STATE</div></div>
+  </div>
+  <div class="scroll-cue">SCROLL</div>
+</header>
+
+<div class="divider"></div>
+
+<!-- LOOP -->
+<section id="loop" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="kicker">The Sacred Loop</div>
+      <h2 class="title">วงจรสี่ขั้น จากความเครียดสู่ความสงบ</h2>
+      <p class="lead">Sonova ทำงานเป็นวงจรปิด (Closed-loop) ตลอดเวลา ไม่ใช่แค่เปิดเพลงผ่อนคลายแล้วจบ แต่ฟังสมองคุณซ้ำทุก 250 มิลลิวินาที เพื่อปรับเสียงให้ตรงกับสภาวะที่เปลี่ยนไป</p>
+    </div>
+    <div class="loop">
+      <div class="card glass ornate reveal"><div class="numeral">I</div><h3>SENSE</h3><div class="th">ตรวจจับ</div><p>ขั้วไฟฟ้าในจุกหูอ่านคลื่นสมอง (Ear-EEG) วิเคราะห์สัดส่วนคลื่น β/α ที่บ่งบอกความตึงเครียดของสมอง</p></div>
+      <div class="card glass ornate reveal"><div class="numeral">II</div><h3>CONFIRM</h3><div class="th">ยืนยัน</div><p>ดึงค่า HR และ HRV จาก Apple Watch มาตรวจซ้ำ แยก "เครียดจริง" ออกจาก "ตื่นเต้น" หรือ "ออกกำลังกาย"</p></div>
+      <div class="card glass ornate reveal"><div class="numeral">III</div><h3>COMPOSE</h3><div class="th">ประพันธ์</div><p>AI แต่งเพลงใหม่ หรือหยิบท่อนที่เหมาะจากเพลงที่คุณฟังอยู่ แล้วฝังคลื่นบำบัดซ่อนไว้ใต้เสียงดนตรี</p></div>
+      <div class="card glass ornate reveal"><div class="numeral">IV</div><h3>HEAL</h3><div class="th">เยียวยา</div><p>ค่อยๆ ลดจังหวะเพลงตามหัวใจ (Tempo Entrainment) และติดตามผลจนสมองกลับสู่คลื่น α อย่างเป็นธรรมชาติ</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3D LAB -->
+<section id="lab" class="section" style="padding-top:clamp(20px,3vw,40px)">
+  <div class="container">
+    <div class="reveal">
+      <div class="kicker">Anatomy Lab · 3D</div>
+      <h2 class="title">ส่องทะลุทุกชั้นของ Sonova</h2>
+      <p class="lead">หมุนโมเดลได้ 360° สลับโหมด X-Ray หรือแยกชิ้นส่วน แล้วแตะแต่ละชิ้นเพื่อดูว่าทำหน้าที่อะไร ผลิตด้วยกระบวนการใด และสัญญาณไหลผ่านอย่างไร</p>
+    </div>
+    <div class="lab reveal">
+      <div class="viewer" id="viewer">
+        <div id="lab-canvas"></div>
+        <div class="hotspots" id="hotspots"></div>
+        <div class="modes" id="modes">
+          <button data-mode="assembled" class="active">ประกอบ</button>
+          <button data-mode="xray">X-Ray</button>
+          <button data-mode="exploded">แยกชิ้นส่วน</button>
+        </div>
+        <div class="zoom"><button id="zin" title="ซูมเข้า" aria-label="ซูมเข้า">+</button><button id="zout" title="ซูมออก" aria-label="ซูมออก">−</button><button id="zreset" title="รีเซ็ตมุมมอง" aria-label="รีเซ็ตมุมมอง">⟲</button></div>
+        <button class="peek" id="peek"><b id="peek-name"></b><span>ดูรายละเอียด ↓</span></button>
+        <div class="viewer-hint">ลากเพื่อหมุน · ปุ่ม +/− เพื่อซูม · คลิกชิ้นส่วนเพื่อส่องรายละเอียด</div>
+        <button class="touch-gate" id="touch-gate">✋ แตะเพื่อหมุน / ซูมโมเดล</button>
+        <div class="loading" id="loading">SUMMONING 3D MODEL…</div>
+      </div>
+      <aside class="info glass ornate" id="info">
+        <div class="chips" id="chips"></div>
+        <div id="info-body">
+          <div class="i-no">OVERVIEW · 7 CORE MODULES</div>
+          <h3>Sonova One</h3>
+          <div class="i-th">สายการผลิตหลัก (Assembly Line)</div>
+          <p>หูฟังหนึ่งข้างรวมเซนเซอร์ทางการแพทย์ ชิป AI และระบบเสียงคุณภาพสูงไว้ในพื้นที่ไม่ถึง 3 ลูกบาศก์เซนติเมตร ผ่านกระบวนการผลิต 7 ขั้นหลัก</p>
+          <h4>กระบวนการ</h4>
+          <ol class="steps">
+            <li>SMT วางชิป Sonova S1 และ AFE บน Rigid-Flex PCB แล้วอบ Reflow</li>
+            <li>ขึ้นรูปเปลือกด้วย Precision Injection Molding เคลือบ Ceramic Coating กันรอย</li>
+            <li>ประกอบไดรเวอร์กราฟีนและจับคู่ซ้าย–ขวา ให้ต่างกันไม่เกิน ±1 dB</li>
+            <li>ขึ้นรูปจุกซิลิโคนและเคลือบขั้ว Ag/AgCl พร้อมเดินสายสัญญาณ</li>
+            <li>ปิดเปลือกด้วย Ultrasonic Welding เพื่อกันน้ำ IP55 โดยไม่ใช้กาว</li>
+            <li>สอบเทียบ EEG ด้วยสัญญาณจำลองระดับไมโครโวลต์ (Phantom Head Test)</li>
+            <li>QC เสียง ระบบ RF และแบตเตอรี่ แล้วโหลดโมเดล AI ลงชิป</li>
+          </ol>
+          <p style="margin-top:14px;font-size:13px;color:var(--muted)">→ เลือกชิ้นส่วนด้านบน หรือแตะบนโมเดลเพื่อดูรายละเอียดเชิงลึก</p>
+        </div>
+        <button class="reset-link" id="info-reset">⟲ กลับสู่ภาพรวม</button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOUND ENGINE -->
+<section id="engine" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="kicker">AI Generative Sound Engine</div>
+      <h2 class="title">สองเส้นทางสู่ความสงบ</h2>
+      <p class="lead">คลื่นบำบัดจะได้ผลก็ต่อเมื่อคุณ "อยากฟังต่อ" Sonova จึงไม่บังคับให้คุณฟังเสียงหึ่งๆ น่าเบื่อ แต่ซ่อนคลื่นไว้ในดนตรีที่ไพเราะ ไม่ว่าจะเป็นเพลงที่ AI แต่งให้ใหม่ หรือเพลงโปรดของคุณเอง</p>
+    </div>
+    <div class="modes-grid">
+      <div class="mode-card glass ornate reveal">
+        <span class="badge" style="color:var(--cyan);border-color:rgba(110,231,255,.4)">MODE I</span>
+        <h3>GENESIS</h3>
+        <div class="sub">AI ประพันธ์เพลงใหม่ ไม่ซ้ำกันทุกครั้ง ปรับตามสมองคุณแบบเรียลไทม์</div>
+        <ul class="flow">
+          <li><i>01</i><div><b>อ่านสภาวะ</b> — รับ Stress Index, HR และช่วงเวลาของวัน (ทำงาน / ก่อนนอน)</div></li>
+          <li><i>02</i><div><b>Generative Composer</b> — โมเดล Music Transformer แต่งคอร์ดโทน Lydian/Major 7 เสียงนุ่ม ไม่มีจุดสะดุด</div></li>
+          <li><i>03</i><div><b>Tempo Entrainment</b> — เริ่มที่จังหวะเท่าหัวใจปัจจุบัน แล้วค่อยๆ ลดลงเพื่อพาหัวใจช้าลงตาม</div></li>
+          <li><i>04</i><div><b>Neuro Layer</b> — ทอคลื่น Binaural/Isochronic ด้วยความถี่ที่ตรงคีย์เพลง จึงกลมกลืนเป็นเนื้อเดียว</div></li>
+          <li><i>05</i><div><b>Adaptive Loop</b> — ถ้าสมองยังเครียด AI จะเปลี่ยนเครื่องดนตรี เนื้อเสียง หรือความหนาแน่นของโน้ตทันที</div></li>
+        </ul>
+      </div>
+      <div class="mode-card glass ornate reveal">
+        <span class="badge" style="color:var(--gold);border-color:rgba(212,179,122,.4)">MODE II</span>
+        <h3>RESONANCE</h3>
+        <div class="sub">ยืมเพลงศิลปินที่คุณรักจาก Spotify ให้ AI หาท่อนที่ใช่ แล้วฝังคลื่นบำบัดลงไปอย่างแนบเนียน</div>
+        <ul class="flow">
+          <li><i>01</i><div><b>Music Intelligence</b> — วิเคราะห์ BPM, คีย์, Energy และ Valence ของเพลงในเพลย์ลิสต์</div></li>
+          <li><i>02</i><div><b>Segment Hunter</b> — หาท่อนที่สงบที่สุด เช่น Intro, Bridge หรือ Outro ที่ 60–80 BPM ไม่มีกลองหนัก</div></li>
+          <li><i>03</i><div><b>Stem Separation</b> — แยกเสียงร้อง เครื่องดนตรี และเบส เพื่อหาช่องว่างให้คลื่นแทรกตัว</div></li>
+          <li><i>04</i><div><b>Stealth Embedding</b> — วางคลื่นบำบัดไว้ใต้เพลง −18 ถึง −24 dB ภายใต้ Psychoacoustic Masking หูแทบไม่ได้ยิน แต่สมองยังรับรู้</div></li>
+          <li><i>05</i><div><b>Seamless Loop</b> — ต่อท่อนเพลงแบบ Beat-matched Crossfade ให้ฟังยาวได้โดยไม่รู้สึกว่าวนซ้ำ</div></li>
+        </ul>
+        <div class="note">แนวคิด: ประมวลผลแบบเรียลไทม์ระหว่างเล่นผ่านช่องทางที่ได้รับอนุญาตจากผู้ให้บริการเพลง ไม่บันทึกหรือแจกจ่ายไฟล์ที่ดัดแปลงแล้ว เพื่อเคารพลิขสิทธิ์ศิลปิน</div>
+      </div>
+    </div>
+
+    <div class="waves">
+      <div class="wave glass reveal"><div class="sym" style="color:var(--violet)">δ</div><h5>Delta</h5><div class="hz">0.5 – 4 Hz</div><p>พาเข้าสู่หลับลึก ใช้ในโหมด Sleep Descent</p></div>
+      <div class="wave glass reveal"><div class="sym" style="color:#b39bff">θ</div><h5>Theta</h5><div class="hz">4 – 8 Hz</div><p>ผ่อนคลายลึก สมาธิแบบเข้าฌาน</p></div>
+      <div class="wave glass reveal"><div class="sym" style="color:var(--cyan)">α</div><h5>Alpha</h5><div class="hz">8 – 12 Hz</div><p>สงบแต่ยังตื่นตัว เป็นคลื่นหลักสำหรับคลายเครียด</p></div>
+      <div class="wave glass reveal"><div class="sym" style="color:var(--gold)">γ</div><h5>Gamma</h5><div class="hz">40 Hz</div><p>ใช้ในโหมด Deep Focus เพื่อการจดจ่อ</p></div>
+      <div class="wave glass reveal"><div class="sym" style="color:var(--green)">∿</div><h5>Resonant Breath</h5><div class="hz">0.1 Hz</div><p>เสียงพองตัวเบาๆ ชวนหายใจ 6 ครั้งต่อนาที ช่วยเพิ่ม HRV</p></div>
+    </div>
+
+    <div class="player glass ornate reveal">
+      <button class="play" id="play" aria-label="เล่นเสียงตัวอย่าง">▶</button>
+      <div style="width:100%;min-width:0">
+        <div class="kicker" style="font-size:11px">Listen · Genesis Preview</div>
+        <div style="margin-top:6px">ฟังตัวอย่างเพลงที่สังเคราะห์สดในเบราว์เซอร์ พร้อมคลื่น Binaural <b id="beat-label" style="color:var(--cyan)">Alpha 10 Hz</b> ที่ซ่อนอยู่ <span style="color:var(--muted);font-size:13px">(ใส่หูฟังเพื่อให้ได้ผล)</span></div>
+        <div class="beat-sel" id="beat-sel">
+          <button data-b="2" data-n="Delta 2 Hz">δ Delta</button>
+          <button data-b="6" data-n="Theta 6 Hz">θ Theta</button>
+          <button data-b="10" data-n="Alpha 10 Hz" class="active">α Alpha</button>
+        </div>
+        <canvas id="viz"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LIVE -->
+<section id="live" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="kicker">Realtime Biofeedback</div>
+      <h2 class="title">ดู Sonova ทำงานแบบสดๆ</h2>
+      <p class="lead">กด "จำลองภาวะเครียด" เพื่อดูว่าระบบตรวจจับจากคลื่นสมอง ยืนยันด้วยหัวใจ แล้วใช้เสียงพาคุณกลับสู่ความสงบอย่างไร ทั้งหมดในเวลาไม่ถึงนาที</p>
+    </div>
+    <div class="live reveal">
+      <div class="eeg-card glass ornate">
+        <div class="card-top"><span class="live-dot"></span>Ear-EEG · 500 SPS · Realtime<span class="r" id="ratio">β/α 0.44</span></div>
+        <canvas id="eeg"></canvas>
+        <div class="ctrl">
+          <button class="btn gold" id="btn-stress">⚡ จำลองภาวะเครียด</button>
+          <button class="btn ghost" id="btn-reset">รีเซ็ต</button>
+        </div>
+      </div>
+      <div class="side">
+        <div class="glass gauge-card">
+          <div class="gauge">
+            <svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="8"/>
+              <circle id="arc" cx="70" cy="70" r="54" fill="none" stroke="#6ee7ff" stroke-width="8" stroke-linecap="round"/></svg>
+            <div class="val"><div><b id="si">12</b><small>STRESS INDEX</small></div></div>
+          </div>
+          <div class="status ok" id="status">ผ่อนคลาย</div>
+        </div>
+        <div class="glass watch">
+          <div class="lbl">Apple Watch</div>
+          <div class="hr"><span class="heart" id="heart">♥</span><b id="hr">70</b><span style="color:var(--muted)">bpm</span></div>
+          <div class="row"><span>HRV (RMSSD)</span><b id="hrv">60 ms</b></div>
+          <div class="row"><span>การเคลื่อนไหว</span><b>นิ่ง</b></div>
+          <div class="row"><span>หายใจ</span><b id="br">12 /นาที</b></div>
+        </div>
+        <div class="glass pipeline">
+          <div class="card-top" style="margin:0">Confirmation Pipeline</div>
+          <div class="stages">
+            <div class="stage"><b>I</b>EEG ตรวจพบ</div>
+            <div class="stage"><b>II</b>Watch ยืนยัน</div>
+            <div class="stage"><b>III</b>AI บำบัด</div>
+            <div class="stage"><b>IV</b>สงบลง</div>
+          </div>
+        </div>
+        <div class="glass logbox">
+          <div class="card-top" style="margin:0">Neural Log</div>
+          <ul id="log"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="fusion glass ornate reveal">
+      <div class="kicker">Dual-Signal Fusion</div>
+      <h3 style="font-family:'Cinzel','Noto Sans Thai';font-size:clamp(20px,2.2vw,24px);margin-top:10px;font-weight:600">ทำไมต้องใช้สองสัญญาณ?</h3>
+      <p class="lead" style="font-size:15px">ถ้าดูแค่คลื่นสมองหรือแค่หัวใจอย่างเดียว ระบบจะเตือนผิดบ่อย Sonova จึงรวมสองสัญญาณด้วยโมเดล Stress-Net บนชิป และใช้ข้อมูลการเคลื่อนไหวจากนาฬิกาช่วยตัดกรณีที่หลอกระบบได้</p>
+      <div class="formula"><span>Stress Index =</span> <span>0.55 · f(β/α, EEG)</span> <span>+ 0.35 · f(ΔHR, ↓HRV)</span> <span>+ 0.10 · f(Breath)</span> <span>× Motion Gate</span></div>
+      <table class="rtable">
+        <thead><tr><th>สถานการณ์</th><th>คลื่นสมอง</th><th>หัวใจ (Watch)</th><th>การเคลื่อนไหว</th><th>ผลวิเคราะห์</th></tr></thead>
+        <tbody>
+          <tr><td>นั่งประชุมแล้วถูกกดดัน</td><td data-label="คลื่นสมอง">β สูง α ต่ำ</td><td data-label="หัวใจ">HR สูง HRV ต่ำ</td><td data-label="การเคลื่อนไหว">นิ่ง</td><td data-label="ผลวิเคราะห์"><span class="tag" style="color:var(--rose);border-color:var(--rose)">เครียดจริง → บำบัด</span></td></tr>
+          <tr><td>วิ่งออกกำลังกาย</td><td data-label="คลื่นสมอง">ปะปน</td><td data-label="หัวใจ">HR สูงมาก</td><td data-label="การเคลื่อนไหว">เคลื่อนไหวต่อเนื่อง</td><td data-label="ผลวิเคราะห์"><span class="tag" style="color:var(--green);border-color:var(--green)">ออกกำลังกาย → ไม่แทรก</span></td></tr>
+          <tr><td>ตั้งใจแก้โจทย์ยาก</td><td data-label="คลื่นสมอง">β สูง</td><td data-label="หัวใจ">HR ปกติ HRV ปกติ</td><td data-label="การเคลื่อนไหว">นิ่ง</td><td data-label="ผลวิเคราะห์"><span class="tag" style="color:var(--cyan);border-color:var(--cyan)">โฟกัส → คงสภาวะไว้</span></td></tr>
+          <tr><td>ดูหนังตื่นเต้น</td><td data-label="คลื่นสมอง">β สูงชั่วครู่</td><td data-label="หัวใจ">HR สูงชั่วครู่</td><td data-label="การเคลื่อนไหว">นิ่ง</td><td data-label="ผลวิเคราะห์"><span class="tag" style="color:#ffd27a;border-color:#ffd27a">ตื่นเต้น → เฝ้าดูต่อ 60 วินาที</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ECOSYSTEM -->
+<section id="eco" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="kicker">The Ecosystem</div>
+      <h2 class="title">เชื่อมทุกอุปกรณ์ เพื่อจิตใจเดียว</h2>
+      <p class="lead">หูฟังรับข้อมูลหัวใจจาก Apple Watch ผ่านแอปบน iPhone (HealthKit) ส่วนเพลงมาจาก Spotify แต่ข้อมูลสมองของคุณไม่ถูกส่งออกไปไหนเลย</p>
+    </div>
+    <div class="eco">
+      <div class="node glass reveal"><div class="ic">WATCH</div><h4>Apple Watch</h4><p>ส่ง HR, HRV และข้อมูลการเคลื่อนไหวทุก 1 วินาทีขณะเซสชันทำงาน</p></div>
+      <div class="node glass reveal"><div class="ic">APP</div><h4>Sonova Sanctum</h4><p>แอป iPhone เป็นศูนย์กลาง รวมข้อมูล ตั้งค่า และแสดงแผนที่ความเครียด</p></div>
+      <div class="node glass reveal"><div class="ic">S1</div><h4>Sonova One</h4><p>ประมวลผล EEG สร้างเสียง และผสมคลื่นบนชิปภายในหูฟัง</p></div>
+      <div class="node glass reveal"><div class="ic">MUSIC</div><h4>Spotify</h4><p>เข้าถึงเพลย์ลิสต์ของคุณ ให้ AI เลือกท่อนเพลงสำหรับโหมด Resonance</p></div>
+    </div>
+    <div class="features">
+      <div class="feat glass reveal"><h5>Stress Map รายวัน</h5><p>ไทม์ไลน์แสดงว่าความเครียดพุ่งช่วงไหน ตรงกับปฏิทินนัดหมายใด ช่วยให้คุณรู้จักตัวกระตุ้นของตัวเอง</p></div>
+      <div class="feat glass reveal"><h5>Calm Shot</h5><p>แตะหูฟัง 3 ครั้ง เพื่อเปิดเซสชันบำบัดฉุกเฉิน 3 นาที เหมาะใช้ก่อนพรีเซนต์งานหรือก่อนสอบ</p></div>
+      <div class="feat glass reveal"><h5>Sleep Descent</h5><p>ค่อยๆ ไล่คลื่นจาก α ลงไป θ และ δ เมื่อตรวจพบว่าหลับแล้ว เสียงจะเฟดออกเองอัตโนมัติ</p></div>
+      <div class="feat glass reveal"><h5>Deep Focus</h5><p>ตรวจจับเมื่อสมาธิเริ่มหลุด แล้วเติมเสียงพื้นหลังที่ช่วยดึงความสนใจกลับมา</p></div>
+      <div class="feat glass reveal"><h5>Mind Journal</h5><p>AI สรุปรายสัปดาห์ว่าเพลงหรือคลื่นแบบไหนทำให้คุณสงบเร็วที่สุด แล้วใช้ข้อมูลนี้ปรับเสียงให้เหมาะกับคุณ</p></div>
+      <div class="feat glass reveal"><h5>Apple Health Sync</h5><p>บันทึก Mindful Minutes และค่า Stress Index ลง Apple Health โดยอัตโนมัติ</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SPECS -->
+<section id="specs" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="kicker">Technical Codex</div>
+      <h2 class="title">ข้อมูลจำเพาะ</h2>
+    </div>
+    <div class="spec-grid reveal">
+      <div>
+        <div class="spec-row"><span>รุ่น</span><b>Sonova One (Concept)</b></div>
+        <div class="spec-row"><span>ไดรเวอร์</span><b>11 mm Graphene Dynamic</b></div>
+        <div class="spec-row"><span>เซนเซอร์สมอง</span><b>Ear-EEG 6 ขั้ว Dry Ag/AgCl · 4 ช่อง</b></div>
+        <div class="spec-row"><span>เซนเซอร์เสริม</span><b>IMU 6 แกน · อุณหภูมิผิว · ไมค์ 3 ตัว/ข้าง</b></div>
+        <div class="spec-row"><span>ชิปประมวลผล</span><b>Sonova S1 Neural SoC (NPU + DSP)</b></div>
+        <div class="spec-row"><span>การเชื่อมต่อ</span><b>Bluetooth 5.4 LE Audio (LC3) · Multipoint</b></div>
+      </div>
+      <div>
+        <div class="spec-row"><span>ข้อมูลหัวใจ</span><b>Apple Watch ผ่าน HealthKit</b></div>
+        <div class="spec-row"><span>ตัดเสียงรบกวน</span><b>Hybrid ANC สูงสุด −45 dB</b></div>
+        <div class="spec-row"><span>แบตเตอรี่</span><b>7 ชม. (เปิด EEG) · 30 ชม. รวมเคส</b></div>
+        <div class="spec-row"><span>กันน้ำกันเหงื่อ</span><b>IP55</b></div>
+        <div class="spec-row"><span>น้ำหนัก</span><b>5.2 g ต่อข้าง</b></div>
+        <div class="spec-row"><span>เคส</span><b>Sanctum Case · Qi2 · UV-C ฆ่าเชื้อจุกหู</b></div>
+      </div>
+    </div>
+
+    <div class="privacy">
+      <div class="feat glass reveal"><h5>On-Device Neural</h5><p>คลื่นสมองถูกวิเคราะห์บนชิปในหูฟัง ข้อมูลดิบไม่ถูกส่งขึ้นคลาวด์</p></div>
+      <div class="feat glass reveal"><h5>Neural Data Vault</h5><p>ข้อมูลที่บันทึกไว้เข้ารหัสใน Secure Enclave ของ iPhone</p></div>
+      <div class="feat glass reveal"><h5>Zero Sharing</h5><p>Spotify และบุคคลที่สามเห็นแค่ว่าเล่นเพลงอะไร ไม่เห็นสภาวะจิตใจของคุณ</p></div>
+      <div class="feat glass reveal"><h5>Your Mind, Your Call</h5><p>ลบข้อมูลทั้งหมดได้ในแตะเดียว และปิดเซนเซอร์ EEG ได้ทุกเมื่อ</p></div>
+    </div>
+    <div class="disclaimer glass reveal">หมายเหตุ: Sonova เป็นแนวคิดนวัตกรรม (Concept Presentation) ตัวเลขสเปกเป็นค่าเป้าหมายเชิงออกแบบ ผลของคลื่น Binaural ต่อแต่ละบุคคลยังมีงานวิจัยที่หลากหลาย อุปกรณ์นี้มุ่งเน้นด้านความผ่อนคลายและสุขภาวะ (Wellness) ไม่ใช่เครื่องมือแพทย์สำหรับวินิจฉัยหรือรักษาโรค</div>
+  </div>
+</section>
+
+<footer>
+  <div class="big">SONOVA</div>
+  <p>The Sound That Listens Back · Concept Presentation</p>
+</footer>
+
+<!-- ============ GENERAL SCRIPTS ============ -->
+<script>
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ----- Nav + mobile menu -----
+const nav = document.getElementById('nav'), burger = document.getElementById('burger'), mnav = document.getElementById('mnav');
+addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
+function menu(open) {
+  document.body.classList.toggle('menu-open', open);
+  burger.setAttribute('aria-expanded', open);
+  burger.setAttribute('aria-label', open ? 'ปิดเมนู' : 'เปิดเมนู');
+}
+burger.onclick = () => menu(!document.body.classList.contains('menu-open'));
+mnav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu(false)));
+addEventListener('keydown', e => { if (e.key === 'Escape') menu(false); });
+matchMedia('(min-width:1081px)').addEventListener('change', e => { if (e.matches) menu(false); });
+
+// ----- Reveal on scroll -----
+if (REDUCE || !('IntersectionObserver' in window)) {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+} else {
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+}
+
+// Helper: ปรับขนาด canvas ตามกล่องที่ครอบอยู่ (รองรับหมุนจอ/เปลี่ยนขนาด)
+function fitCanvas(cv, cb) {
+  const run = () => { const r = cv.getBoundingClientRect(); if (!r.width) return; cv.width = Math.round(r.width * DPR); cv.height = Math.round(r.height * DPR); cb && cb(cv.width, cv.height); };
+  new ResizeObserver(run).observe(cv); run();
+}
+
+// ===== HERO ORB =====
+(() => {
+  const c = document.getElementById('orb'), x = c.getContext('2d');
+  let vis = true;
+  new IntersectionObserver(e => vis = e[0].isIntersecting).observe(c);
+  fitCanvas(c);
+  function draw(t) {
+    requestAnimationFrame(draw);
+    if (!vis) return;
+    if (REDUCE) t = 0;
+    const w = c.width, h = c.height, cx = w / 2, cy = h / 2, R = Math.min(w, h) * .32;
+    x.clearRect(0, 0, w, h);
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, R * 1.4);
+    g.addColorStop(0, 'rgba(110,231,255,.16)'); g.addColorStop(.5, 'rgba(155,123,255,.07)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = g; x.fillRect(0, 0, w, h);
+    x.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 8; i++) {
+      x.beginPath();
+      for (let a = 0; a <= Math.PI * 2 + .02; a += Math.PI / 120) {
+        const r = R * (.6 + i * .07)
+          + Math.sin(a * (3 + i % 3) + t * .0006 * (1 + i * .3)) * R * .05 * (1 + i * .15)
+          + Math.sin(a * 8 - t * .0012 + i) * R * .014;
+        const px = cx + Math.cos(a) * r, py = cy + Math.sin(a) * r;
+        a === 0 ? x.moveTo(px, py) : x.lineTo(px, py);
+      }
+      x.strokeStyle = i % 2 ? `rgba(212,179,122,${.55 - i * .05})` : `rgba(110,231,255,${.6 - i * .05})`;
+      x.lineWidth = (i === 0 ? 2 : 1) * DPR;
+      x.stroke();
+    }
+    x.globalCompositeOperation = 'source-over';
+  }
+  requestAnimationFrame(draw);
+})();
+
+// ===== AUDIO DEMO (Web Audio) =====
+(() => {
+  let ctx, master, pad, delay, analyser, binL, binR, timer, spark, playing = false, beat = 10, ci = 0;
+  const base = 200;
+  const chords = [[220, 277.18, 329.63, 415.30], [185, 220, 277.18, 329.63], [146.83, 220, 277.18, 369.99], [164.81, 207.65, 246.94, 329.63]];
+  const penta = [440, 493.88, 554.37, 659.25, 739.99, 880];
+  const playBtn = document.getElementById('play');
+
+  function panner(v) {
+    if (ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = v; return p; }
+    const p = ctx.createPanner(); p.panningModel = 'equalpower'; p.setPosition(v, 0, 1 - Math.abs(v)); return p;
+  }
+  function voice(f, t0, dur, type, g, dest) {
+    const o = ctx.createOscillator(), a = ctx.createGain();
+    o.type = type; o.frequency.value = f;
+    a.gain.setValueAtTime(0, t0);
+    a.gain.linearRampToValueAtTime(g, t0 + dur * .35);
+    a.gain.linearRampToValueAtTime(0, t0 + dur);
+    o.connect(a); a.connect(dest); o.start(t0); o.stop(t0 + dur + .1);
+  }
+  function chord() {
+    const t = ctx.currentTime, ch = chords[ci % 4];
+    ch.forEach(f => { voice(f, t, 6, 'sine', .045, pad); voice(f * 1.003, t, 6, 'triangle', .018, pad); });
+    voice(ch[0] / 2, t, 6, 'sine', .06, pad);
+    ci++;
+  }
+  function sparkle() { if (Math.random() < .6) voice(penta[Math.floor(Math.random() * penta.length)], ctx.currentTime, 2.4, 'sine', .022, delay); }
+
+  function start() {
+    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    const t = ctx.currentTime;
+    master = ctx.createGain(); master.gain.setValueAtTime(0, t); master.gain.linearRampToValueAtTime(.85, t + 2);
+    analyser = ctx.createAnalyser(); analyser.fftSize = 1024;
+    master.connect(analyser); analyser.connect(ctx.destination);
+    pad = ctx.createBiquadFilter(); pad.type = 'lowpass'; pad.frequency.value = 1400; pad.connect(master);
+    delay = ctx.createDelay(); delay.delayTime.value = .42;
+    const fb = ctx.createGain(); fb.gain.value = .38; delay.connect(fb); fb.connect(delay); delay.connect(master);
+    const send = ctx.createGain(); send.gain.value = .25; pad.connect(send); send.connect(delay);
+    const bg = ctx.createGain(); bg.gain.value = .05; bg.connect(master);
+    binL = ctx.createOscillator(); binR = ctx.createOscillator();
+    binL.frequency.value = base; binR.frequency.value = base + beat;
+    const pl = panner(-1), pr = panner(1);
+    binL.connect(pl); pl.connect(bg); binR.connect(pr); pr.connect(bg);
+    binL.start(); binR.start();
+    chord(); timer = setInterval(chord, 5000); spark = setInterval(sparkle, 1300);
+    playing = true; playBtn.classList.add('on'); playBtn.textContent = '❚❚'; playBtn.setAttribute('aria-label', 'หยุดเสียง');
+  }
+  function stop() {
+    const m = master, l = binL, r = binR, t = ctx.currentTime;
+    m.gain.cancelScheduledValues(t); m.gain.setValueAtTime(m.gain.value, t); m.gain.linearRampToValueAtTime(0, t + 1.2);
+    clearInterval(timer); clearInterval(spark);
+    setTimeout(() => { l.stop(); r.stop(); m.disconnect(); }, 1300);
+    playing = false; playBtn.classList.remove('on'); playBtn.textContent = '▶'; playBtn.setAttribute('aria-label', 'เล่นเสียงตัวอย่าง');
+  }
+  playBtn.onclick = () => playing ? stop() : start();
+  document.addEventListener('visibilitychange', () => { if (document.hidden && playing) stop(); });
+  document.querySelectorAll('#beat-sel button').forEach(b => b.onclick = () => {
+    document.querySelectorAll('#beat-sel button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); beat = +b.dataset.b;
+    document.getElementById('beat-label').textContent = b.dataset.n;
+    if (playing) binR.frequency.setTargetAtTime(base + beat, ctx.currentTime, .5);
+  });
+
+  const vc = document.getElementById('viz'), vx = vc.getContext('2d'); let buf;
+  fitCanvas(vc);
+  function viz(t) {
+    requestAnimationFrame(viz);
+    const W = vc.width, H = vc.height;
+    vx.clearRect(0, 0, W, H);
+    const grad = vx.createLinearGradient(0, 0, W, 0);
+    grad.addColorStop(0, 'rgba(110,231,255,0)'); grad.addColorStop(.5, '#d4b37a'); grad.addColorStop(1, 'rgba(110,231,255,0)');
+    vx.strokeStyle = grad; vx.lineWidth = 1.5 * DPR; vx.beginPath();
+    if (playing && analyser) {
+      buf = buf || new Uint8Array(analyser.fftSize);
+      analyser.getByteTimeDomainData(buf);
+      for (let i = 0; i < buf.length; i++) { const px = i / buf.length * W, py = H / 2 + (buf[i] - 128) / 128 * H * 2.2; i ? vx.lineTo(px, py) : vx.moveTo(px, py); }
+    } else {
+      for (let px = 0; px <= W; px += 3) { const py = H / 2 + Math.sin(px * .02 + t * .002) * H * .12 * Math.sin(px / W * Math.PI); px ? vx.lineTo(px, py) : vx.moveTo(px, py); }
+    }
+    vx.stroke();
+  }
+  requestAnimationFrame(viz);
+})();
+
+// ===== LIVE BIOFEEDBACK SIM =====
+(() => {
+  const $ = id => document.getElementById(id);
+  const cv = $('eeg'), cx = cv.getContext('2d');
+  let W = 1, H = 1;
+  fitCanvas(cv, (w, h) => { W = w; H = h; });
+  const lanes = [
+    { name: 'RAW EEG · T7/T8 IN-EAR', short: 'RAW EEG', color: '#e8e6f0' },
+    { name: 'θ THETA 4–8 Hz', short: 'θ THETA', color: '#9b7bff' },
+    { name: 'α ALPHA 8–12 Hz', short: 'α ALPHA', color: '#6ee7ff' },
+    { name: 'β BETA 13–30 Hz', short: 'β BETA', color: '#ff6b8b' },
+    { name: 'SONOVA THERAPY LAYER', short: 'THERAPY', color: '#d4b37a' }
+  ];
+  let s = .12, sT = .12, therapy = 0, therapyT = 0, phase = 'idle', pt = 0, T = 0, clock = 0, ui = 0, flags = {}, last = performance.now(), vis = true;
+  new IntersectionObserver(e => vis = e[0].isIntersecting).observe(cv);
+  const stages = [...document.querySelectorAll('.stage')];
+  const arc = $('arc'), C = 2 * Math.PI * 54; arc.style.strokeDasharray = C;
+
+  function log(msg, type = '') {
+    const li = document.createElement('li');
+    const m = Math.floor(clock / 60), sec = Math.floor(clock % 60);
+    li.className = type;
+    li.innerHTML = `<time>${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}</time>${msg}`;
+    $('log').prepend(li);
+    while ($('log').children.length > 6) $('log').lastChild.remove();
+  }
+  function setStatus(t, c) { const el = $('status'); el.textContent = t; el.className = 'status ' + c; }
+  function reset(hard) {
+    stages.forEach(st => st.classList.remove('on')); flags = {};
+    if (hard) { s = .12; sT = .12; therapy = 0; therapyT = 0; phase = 'idle'; $('log').innerHTML = ''; setStatus('ผ่อนคลาย', 'ok'); log('ระบบพร้อม — เฝ้าดูสัญญาณสมองและหัวใจ', 'muted'); }
+  }
+  $('btn-stress').onclick = () => {
+    if (['rising', 'confirmed', 'treating'].includes(phase)) return;
+    reset(false); therapyT = 0; sT = .88; phase = 'rising';
+    log('สถานการณ์จำลอง: ได้รับอีเมลด่วนจากหัวหน้า "ต้องการงานภายใน 1 ชม."', 'muted');
+    setStatus('กำลังวิเคราะห์…', 'warn');
+  };
+  $('btn-reset').onclick = () => reset(true);
+  reset(true);
+
+  function val(i, u, T) {
+    const th = (.55 - .2 * s) * Math.sin(u * .025 - T * 2.2);
+    const al = (1 - .7 * s) * Math.sin(u * .06 - T * 5) * (.65 + .35 * Math.sin(u * .008 - T * .8));
+    const be = (.2 + .8 * s) * (Math.sin(u * .16 - T * 11) * .6 + Math.sin(u * .23 - T * 15) * .4);
+    if (i === 0) return (th * .5 + al * .6 + be * .6 + Math.sin(u * 1.3 - T * 40) * .08 * Math.sin(u * .05)) * .8;
+    if (i === 1) return th; if (i === 2) return al; if (i === 3) return be;
+    return therapy * Math.sin(u * .06 - T * 5) * (.6 + .4 * Math.sin(u * .01 - T * .6));
+  }
+  function draw() {
+    cx.clearRect(0, 0, W, H);
+    const n = lanes.length, lh = H / n, narrow = W / DPR < 460;
+    cx.font = `${(narrow ? 9 : 10) * DPR}px Inter, sans-serif`;
+    const step = (narrow ? 3 : 2) * DPR;
+    for (let i = 0; i < n; i++) {
+      const y0 = lh * i + lh / 2;
+      cx.strokeStyle = 'rgba(255,255,255,.05)'; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(0, y0); cx.lineTo(W, y0); cx.stroke();
+      cx.fillStyle = 'rgba(232,230,240,.45)'; cx.fillText(narrow ? lanes[i].short : lanes[i].name, 10 * DPR, lh * i + 14 * DPR);
+      cx.beginPath(); cx.strokeStyle = lanes[i].color; cx.lineWidth = 1.4 * DPR;
+      cx.shadowColor = lanes[i].color; cx.shadowBlur = 8 * DPR;
+      for (let x = 0; x <= W; x += step) { const y = y0 - val(i, x / DPR, T) * lh * .32; x === 0 ? cx.moveTo(x, y) : cx.lineTo(x, y); }
+      cx.stroke(); cx.shadowBlur = 0;
+    }
+  }
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    if (!vis) return;
+    T += REDUCE ? dt * .25 : dt; clock += dt;
+    const d = sT - s, rate = d > 0 ? .28 : .075;
+    s += Math.sign(d) * Math.min(Math.abs(d), rate * dt);
+    therapy += (therapyT - therapy) * Math.min(1, dt * 1.5);
+    const hr = 66 + s * 36 + Math.sin(T * 1.3) * 1.2, hrv = 64 - s * 38, ratio = (.3 + .9 * s) / (1 - .65 * s);
+
+    if (phase === 'rising') {
+      if (s > .42 && !flags.eeg) { flags.eeg = true; stages[0].classList.add('on'); log(`EEG: β เพิ่มขึ้น α ลดลง (β/α = ${ratio.toFixed(2)}) สงสัยภาวะเครียด`, 'warn'); }
+      if (s > .72 && flags.eeg && !flags.watch) {
+        flags.watch = true; stages[1].classList.add('on');
+        log(`Apple Watch ยืนยัน: HR ${Math.round(hr)} bpm · HRV ${Math.round(hrv)} ms · ร่างกายนิ่ง จึงไม่ใช่การออกกำลังกาย`, 'bad');
+        setStatus('ยืนยันภาวะเครียด', 'bad'); phase = 'confirmed'; pt = 0;
+      }
+    } else if (phase === 'confirmed') {
+      pt += dt;
+      if (pt > 1.8) {
+        stages[2].classList.add('on'); therapyT = 1; sT = .14; phase = 'treating';
+        log('AI Sound Engine: เลือกท่อน Bridge ของเพลงที่กำลังเล่น (72 BPM, D major) แล้วฝัง Alpha 10 Hz ที่ −21 dB', 'info');
+        setStatus('กำลังบำบัด', 'info');
+      }
+    } else if (phase === 'treating') {
+      if (s < .55 && !flags.tempo) { flags.tempo = true; log('Tempo Entrainment: ลดจังหวะเพลง 72 → 64 BPM พร้อมเสียงชวนหายใจ 6 ครั้ง/นาที', 'info'); }
+      if (s < .2) { stages[3].classList.add('on'); therapyT = .35; phase = 'calm'; setStatus('ผ่อนคลาย', 'ok'); log('กลับสู่ภาวะผ่อนคลาย ✓ บันทึก Mindful Minutes ลง Apple Health', 'ok'); }
+    }
+    ui += dt;
+    if (ui > .15) {
+      ui = 0;
+      $('hr').textContent = Math.round(hr);
+      $('hrv').textContent = Math.round(hrv) + ' ms';
+      $('br').textContent = Math.round(11 + s * 9) + ' /นาที';
+      $('ratio').textContent = 'β/α ' + ratio.toFixed(2);
+      $('si').textContent = Math.round(s * 100);
+      arc.style.strokeDashoffset = C * (1 - s);
+      arc.style.stroke = `hsl(${170 - s * 170},85%,62%)`;
+      $('heart').style.animationDuration = (60 / hr) + 's';
+    }
+    draw();
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+<!-- ============ THREE.JS 3D LAB ============ -->
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const IS_TOUCH = matchMedia('(pointer: coarse)').matches;
+const LOW_POWER = IS_TOUCH || innerWidth < 768;
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const singleCol = matchMedia('(max-width:1080px)');
+
+const DATA = {
+  eartip: { no: '01', color: 0x6ee7ff, name: 'Neuro-Tip Electrodes', th: 'จุกหูพร้อมขั้ววัดคลื่นสมอง',
+    desc: 'จุกซิลิโคนเกรดการแพทย์ที่ฝังขั้วไฟฟ้าแบบแห้ง 6 จุด แนบกับผิวในช่องหูเพื่ออ่านคลื่นไฟฟ้าสมอง (Ear-EEG) ระดับไมโครโวลต์ โดยไม่ต้องใช้เจล',
+    steps: ['ขึ้นรูปซิลิโคนเหลว (LSR Injection Molding) เกรด ISO 10993 ปลอดภัยต่อผิว', 'เคลือบขั้วด้วย Ag/AgCl ผ่านกระบวนการ Sputtering ให้นำไฟฟ้าได้ดีและทนเหงื่อ', 'ร้อยวงจร Flex PCB ผ่านท่อ Nozzle ไปยังชิป AFE', 'ทดสอบค่าความต้านทานผิวสัมผัส (Impedance) ทุกขั้วก่อนประกอบ', 'ขณะใช้งาน AI ตรวจคุณภาพการสัมผัสทุก 2 วินาที และแจ้งเตือนเมื่อใส่ไม่แน่น'],
+    specs: [['ช่องสัญญาณ', '4 + REF + Bias'], ['ชนิดขั้ว', 'Dry Ag/AgCl'], ['ขนาดจุก', 'XS / S / M / L'], ['วัสดุ', 'Medical LSR']] },
+  driver: { no: '02', color: 0x6ee7ff, name: 'Graphene Driver', th: 'ไดรเวอร์เสียงไดอะแฟรมกราฟีน',
+    desc: 'ไดรเวอร์ไดนามิก 11 มม. ไดอะแฟรมเคลือบกราฟีน เบาและแข็ง ถ่ายทอดคลื่นบำบัดความถี่ต่ำได้แม่นยำ โดยไม่กลบรายละเอียดของเพลง',
+    steps: ['ขึ้นรูปไดอะแฟรมด้วย Thermoforming แล้วเคลือบกราฟีนด้วยกระบวนการ CVD', 'พันขดลวด Voice Coil (CCAW) ด้วยเครื่องพันความแม่นยำสูง', 'ประกอบแม่เหล็กนีโอไดเมียม N52 เข้ากับ Pole Piece', 'จูนเสียงในห้องไร้เสียงสะท้อน (Anechoic Chamber)', 'จับคู่ซ้าย–ขวาให้ต่างกันไม่เกิน ±1 dB เพราะคลื่น Binaural ต้องอาศัยความสมดุลของสองหู'],
+    specs: [['ขนาด', '11 mm'], ['ตอบสนอง', '5 Hz – 40 kHz'], ['THD', '< 0.08%'], ['แม่เหล็ก', 'N52 Neodymium']] },
+  afe: { no: '03', color: 0x9b7bff, name: 'NeuroSense AFE', th: 'ชิปขยายและแปลงสัญญาณสมอง',
+    desc: 'Analog Front-End ที่ออกแบบเพื่อสัญญาณสมองโดยเฉพาะ ขยายสัญญาณที่เบากว่าแบตเตอรี่ AA นับล้านเท่าให้คมชัด และกำจัดสัญญาณรบกวน',
+    steps: ['รับสัญญาณระดับ µV จากขั้ว แล้วขยายด้วย Instrumentation Amplifier สัญญาณรบกวนต่ำ', 'กรองช่วง 0.5–45 Hz และตัดคลื่นไฟบ้าน 50 Hz ด้วย Notch Filter', 'แปลงเป็นดิจิทัลด้วย ADC 24-bit ที่ 500 ตัวอย่างต่อวินาที', 'ใช้ IMU ช่วยลบสัญญาณรบกวนจากการเคี้ยว กระพริบตา และขยับศีรษะ', 'ส่งข้อมูลไปยัง NPU ผ่านบัส SPI'],
+    specs: [['ADC', '24-bit'], ['Noise', '< 1 µVrms'], ['Sampling', '250 / 500 SPS'], ['กินไฟ', '< 1 mW']] },
+  soc: { no: '04', color: 0xd4b37a, name: 'Sonova S1 Neural SoC', th: 'สมองกล AI บนตัวเครื่อง',
+    desc: 'ชิปแบบ System-in-Package ที่รวม NPU, DSP เสียง และ Bluetooth LE Audio ไว้ด้วยกัน ทำหน้าที่วิเคราะห์ความเครียด สร้างเพลง และผสมคลื่นภายในหูฟัง',
+    steps: ['รวมชิปหลายตัวเป็น SiP ช่วยลดขนาดบอร์ดลงประมาณ 40%', 'วางชิ้นส่วนด้วย SMT แล้วอบ Reflow บน Rigid-Flex PCB', 'NPU ทำ FFT แยกคลื่น δ θ α β γ ทุก 250 ms', 'โมเดล Stress-Net รวมค่า EEG กับ HR/HRV เป็น Stress Index', 'DSP ผสมคลื่นบำบัดเข้ากับเพลงแบบเรียลไทม์ พร้อมระบบ ANC'],
+    specs: [['NPU', '4 TOPS (เป้าหมาย)'], ['Audio', 'LC3 · 24-bit'], ['Latency', '< 20 ms'], ['โมเดล', 'Stress-Net v2']] },
+  battery: { no: '05', color: 0x6ee7ff, name: 'Silicon-Anode Cell', th: 'แบตเตอรี่ทรงกระบอกในก้าน',
+    desc: 'แบตเตอรี่ลิเธียมไอออนแอโนดซิลิคอน-คาร์บอน ความหนาแน่นพลังงานสูง จ่ายไฟให้เซนเซอร์ EEG ทำงานต่อเนื่องได้ทั้งวัน',
+    steps: ['ม้วนเซลล์ (Winding) ด้วยแอโนดซิลิคอน-คาร์บอนความจุสูง', 'ติดตั้งวงจรป้องกัน (PCM) กันชาร์จเกิน ลัดวงจร และความร้อนสูง', 'ทดสอบ Aging 72 ชั่วโมง เพื่อคัดเซลล์ที่ไม่เสถียรออก', 'ชาร์จไร้สาย Qi2 ผ่าน Sanctum Case'],
+    specs: [['ความจุ', '72 mAh'], ['ใช้งาน', '7 ชม. (EEG on)'], ['รวมเคส', '30 ชม.'], ['ชาร์จเร็ว', '5 นาที = 1 ชม.']] },
+  antenna: { no: '06', color: 0xd4b37a, name: 'LDS Helix Antenna', th: 'เสาอากาศเกลียวรอบก้าน',
+    desc: 'เสาอากาศที่ใช้เลเซอร์สลักลงบนผิวด้านในของก้าน ให้สัญญาณเสถียรกับ iPhone ซึ่งเป็นตัวกลางส่งข้อมูลหัวใจจาก Apple Watch',
+    steps: ['สร้างลายเสาอากาศด้วยเลเซอร์ (Laser Direct Structuring)', 'ชุบทองแดง นิกเกิล และทอง ด้วย Electroless Plating', 'จูนคลื่น 2.4 GHz ในห้อง RF Chamber', 'Apple Watch ส่ง HR/HRV เข้า iPhone ผ่าน HealthKit แล้ว iPhone ส่งต่อมายังหูฟัง'],
+    specs: [['มาตรฐาน', 'Bluetooth 5.4'], ['ระยะ', '15 m'], ['ลิงก์', 'Dual-link L/R'], ['ความถี่', '2.4 GHz']] },
+  mic: { no: '07', color: 0xff6b8b, name: 'Tri-MEMS Mic Array', th: 'ไมโครโฟน MEMS 3 ตัว',
+    desc: 'ไมโครโฟนสามตัวต่อข้าง ใช้ทั้งตัดเสียงรบกวนและตรวจจับจังหวะการหายใจ ซึ่งเป็นสัญญาณยืนยันความเครียดอีกชั้น',
+    steps: ['ทำ Beamforming แยกเสียงพูดออกจากเสียงรบกวน', 'ทำ Hybrid ANC ตัดเสียงรอบข้างก่อนเริ่มเซสชันบำบัด', 'ตรวจจับจังหวะการหายใจ (Breath Detection) ส่งให้ Stress-Net', 'ไมค์ด้านใน (Feedback) วัดเสียงจริงในช่องหู เพื่อคุมระดับคลื่นบำบัดให้อยู่ในระดับปลอดภัย'],
+    specs: [['SNR', '70 dB'], ['ANC', '−45 dB Hybrid'], ['จำนวน', '3 ตัว/ข้าง'], ['ชนิด', 'MEMS']] }
+};
+
+const viewer = document.getElementById('viewer');
+const holder = document.getElementById('lab-canvas');
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, LOW_POWER ? 1.5 : 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+holder.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060b);
+scene.fog = new THREE.FogExp2(0x05060b, 0.04);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+
+// กล้อง + ระยะที่ปรับตามสัดส่วนจอ (จอแนวตั้งจะถอยกล้องออกให้เห็นครบ)
+const BASE_DIR = new THREE.Vector3(4.4, 1.6, 6.4), BASE_LEN = BASE_DIR.length();
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+camera.position.copy(BASE_DIR);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.enablePan = false;
+controls.enableZoom = IS_TOUCH;   // มือถือ: ใช้สองนิ้วซูมได้ / คอม: ใช้ปุ่ม +/− (ไม่แย่ง scroll ของหน้าเว็บ)
+controls.autoRotate = !REDUCE; controls.autoRotateSpeed = 0.7;
+controls.rotateSpeed = IS_TOUCH ? 0.8 : 1;
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+const key = new THREE.DirectionalLight(0xfff1dc, 1.6); key.position.set(4, 6, 5); scene.add(key);
+const rimC = new THREE.PointLight(0x6ee7ff, 18, 20); rimC.position.set(-4, 1, -3); scene.add(rimC);
+const rimG = new THREE.PointLight(0xd4b37a, 14, 20); rimG.position.set(3, -3, -2); scene.add(rimG);
+
+const M = {
+  shell: () => new THREE.MeshPhysicalMaterial({ color: 0x14161d, metalness: .35, roughness: .22, clearcoat: 1, clearcoatRoughness: .08, transparent: true, opacity: .96 }),
+  gold: () => new THREE.MeshStandardMaterial({ color: 0xd4b37a, metalness: 1, roughness: .25 }),
+  dark: () => new THREE.MeshStandardMaterial({ color: 0x1b1d24, metalness: .6, roughness: .4 }),
+  silver: () => new THREE.MeshStandardMaterial({ color: 0xb9bec9, metalness: 1, roughness: .3 }),
+  pcb: () => new THREE.MeshStandardMaterial({ color: 0x0b3d33, metalness: .2, roughness: .6 }),
+  glow: (c, i = 1.5) => new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: i, metalness: .2, roughness: .4 }),
+  silicone: () => new THREE.MeshPhysicalMaterial({ color: 0x22343c, roughness: .55, metalness: 0, transparent: true, opacity: .9, sheen: 1, sheenColor: new THREE.Color(0x6ee7ff) })
+};
+function add(parent, geo, mat, p = [0, 0, 0], r = [0, 0, 0], s = [1, 1, 1]) {
+  const m = new THREE.Mesh(geo, mat); m.position.set(...p); m.rotation.set(...r); m.scale.set(...s); parent.add(m); return m;
+}
+const SEG = LOW_POWER ? .6 : 1; // ลดจำนวนโพลีกอนบนมือถือ
+const sg = n => Math.max(8, Math.round(n * SEG));
+
+const pivot = new THREE.Group(); scene.add(pivot);
+const bud = new THREE.Group(); bud.position.set(-.2, .3, 0); bud.rotation.set(.12, -.5, .05); pivot.add(bud);
+
+// Shell
+const shell = new THREE.Group(); bud.add(shell);
+const shellMats = [];
+const sm = () => { const m = M.shell(); shellMats.push(m); return m; };
+add(shell, new THREE.SphereGeometry(.62, sg(64), sg(48)), sm(), [0, .5, 0], [0, 0, 0], [1, .9, .95]);
+add(shell, new THREE.CylinderGeometry(.22, .27, .42, sg(48)), sm(), [.62, .5, 0], [0, 0, -Math.PI / 2]);
+add(shell, new THREE.CapsuleGeometry(.2, 1.3, 16, sg(32)), sm(), [-.05, -.55, 0]);
+add(shell, new THREE.TorusGeometry(.205, .014, 16, sg(80)), M.gold(), [-.05, -1.15, 0], [Math.PI / 2, 0, 0]);
+add(shell, new THREE.TorusGeometry(.2, .012, 16, sg(80)), M.gold(), [-.615, .5, 0], [0, Math.PI / 2, 0]);
+add(shell, new THREE.SphereGeometry(.035, 16, 16), M.glow(0x6ee7ff, 2), [-.62, .5, 0]);
+const wireMat = new THREE.MeshBasicMaterial({ color: 0x6ee7ff, wireframe: true, transparent: true, opacity: 0, depthWrite: false });
+add(shell, new THREE.SphereGeometry(.635, 28, 18), wireMat, [0, .5, 0], [0, 0, 0], [1, .9, .95]);
+add(shell, new THREE.CapsuleGeometry(.21, 1.3, 6, 16), wireMat, [-.05, -.55, 0]);
+const shellMeshes = shell.children.filter(o => o.isMesh);
+
+// Components
+const comps = {};
+function comp(k, off) { const g = new THREE.Group(); g.userData = { key: k, offset: new THREE.Vector3(...off) }; bud.add(g); comps[k] = g; return g; }
+
+{ const g = comp('eartip', [1.5, .1, 0]);
+  add(g, new THREE.SphereGeometry(.36, sg(48), sg(32)), M.silicone(), [.98, .5, 0], [0, 0, 0], [.75, 1, 1]);
+  for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; add(g, new THREE.SphereGeometry(.045, 16, 16), M.gold(), [1.15, .5 + Math.cos(a) * .27, Math.sin(a) * .27]); }
+  add(g, new THREE.CylinderGeometry(.08, .08, .06, 24), M.glow(0x6ee7ff, .8), [1.24, .5, 0], [0, 0, Math.PI / 2]); }
+
+{ const g = comp('driver', [.8, .9, .4]);
+  add(g, new THREE.CylinderGeometry(.24, .24, .1, sg(48)), M.dark(), [.3, .5, 0], [0, 0, Math.PI / 2]);
+  add(g, new THREE.CylinderGeometry(.12, .12, .12, sg(32)), M.silver(), [.26, .5, 0], [0, 0, Math.PI / 2]);
+  const dm = M.glow(0x6ee7ff, .35); dm.side = THREE.DoubleSide;
+  add(g, new THREE.ConeGeometry(.28, .09, sg(48), 1, true), dm, [.4, .5, 0], [0, 0, -Math.PI / 2]);
+  add(g, new THREE.TorusGeometry(.28, .018, 12, sg(64)), M.gold(), [.4, .5, 0], [0, Math.PI / 2, 0]); }
+
+{ const g = comp('afe', [-.3, 1.3, .6]);
+  add(g, new THREE.BoxGeometry(.32, .05, .26), M.dark(), [-.12, .86, .12]);
+  add(g, new THREE.BoxGeometry(.14, .02, .12), M.glow(0x9b7bff, 1.3), [-.12, .895, .12]);
+  for (let i = 0; i < 5; i++) { add(g, new THREE.BoxGeometry(.03, .02, .04), M.gold(), [-.24 + i * .06, .85, .265]); add(g, new THREE.BoxGeometry(.03, .02, .04), M.gold(), [-.24 + i * .06, .85, -.025]); } }
+
+{ const g = comp('soc', [-1.4, .4, .5]);
+  add(g, new THREE.BoxGeometry(.72, .03, .6), M.pcb(), [-.12, .45, 0]);
+  add(g, new THREE.BoxGeometry(.3, .06, .3), M.dark(), [-.12, .5, 0]);
+  add(g, new THREE.BoxGeometry(.16, .012, .16), M.glow(0xd4b37a, 1.4), [-.12, .535, 0]);
+  [[-.38, .48, .2], [-.38, .48, -.2], [.12, .48, .2], [.14, .48, -.18], [-.4, .48, 0], [.16, .48, 0]]
+    .forEach((p, i) => add(g, new THREE.BoxGeometry(.07, .03, .05), i % 2 ? M.silver() : M.dark(), p));
+  add(g, new THREE.BoxGeometry(.08, .5, .012), M.glow(0xd4b37a, .4), [-.08, .17, 0]); }
+
+{ const g = comp('battery', [-1.2, -.7, .3]);
+  add(g, new THREE.CylinderGeometry(.14, .14, .85, sg(48)), M.silver(), [-.05, -.72, 0]);
+  add(g, new THREE.CylinderGeometry(.145, .145, .06, sg(48)), M.glow(0x6ee7ff, 1), [-.05, -.5, 0]);
+  add(g, new THREE.CylinderGeometry(.06, .06, .04, 24), M.gold(), [-.05, -.27, 0]); }
+
+{ const g = comp('antenna', [1.0, -1.0, .4]);
+  const pts = [];
+  for (let i = 0; i <= 160; i++) { const t = i / 160, a = t * Math.PI * 2 * 5; pts.push(new THREE.Vector3(-.05 + Math.cos(a) * .19, -1.32 + t * .42, Math.sin(a) * .19)); }
+  add(g, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), sg(400), .008, 8, false), M.glow(0xd4b37a, 1.6)); }
+
+{ const g = comp('mic', [-.4, .2, -1.3]);
+  [[-.05, -1.34, 0], [-.56, .62, .14], [-.15, .98, -.05]].forEach(p => {
+    add(g, new THREE.CylinderGeometry(.045, .045, .05, 24), M.dark(), p);
+    add(g, new THREE.CylinderGeometry(.02, .02, .055, 16), M.glow(0xff6b8b, 1.4), p); }); }
+
+scene.updateMatrixWorld(true);
+Object.values(comps).forEach(g => {
+  const c = new THREE.Box3().setFromObject(g).getCenter(new THREE.Vector3());
+  g.userData.anchor = bud.worldToLocal(c);
+  g.traverse(o => { if (o.isMesh) { o.material.userData.e0 = o.material.emissive.clone(); o.material.userData.i0 = o.material.emissiveIntensity; } });
+});
+const worldAnchor = k => bud.localToWorld(comps[k].userData.anchor.clone().add(comps[k].position));
+
+// Rings + altar dial
+const rings = [];
+for (let i = 0; i < 3; i++) {
+  const r = new THREE.Mesh(new THREE.TorusGeometry(1.7 + i * .5, .004, 8, sg(200)), new THREE.MeshBasicMaterial({ color: i % 2 ? 0xd4b37a : 0x6ee7ff, transparent: true, opacity: .35 }));
+  r.rotation.x = Math.PI / 2 + (i - 1) * .28; scene.add(r); rings.push(r);
+}
+const dial = new THREE.Group(); dial.position.y = -1.75; scene.add(dial);
+const dMat = new THREE.MeshBasicMaterial({ color: 0xd4b37a, transparent: true, opacity: .5, side: THREE.DoubleSide });
+add(dial, new THREE.RingGeometry(1.45, 1.47, sg(160)), dMat, [0, 0, 0], [-Math.PI / 2, 0, 0]);
+add(dial, new THREE.RingGeometry(1.0, 1.008, sg(160)), dMat, [0, 0, 0], [-Math.PI / 2, 0, 0]);
+for (let i = 0; i < 72; i++) { const a = i / 72 * Math.PI * 2; add(dial, new THREE.BoxGeometry(.008, .002, i % 6 ? .05 : .13), dMat, [Math.cos(a) * 1.58, 0, Math.sin(a) * 1.58], [0, Math.PI / 2 - a, 0]); }
+
+// Particles
+const N = LOW_POWER ? 350 : 700, arr = new Float32Array(N * 3);
+for (let i = 0; i < N; i++) { const r = 3 + Math.random() * 7, th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
+  arr[i * 3] = r * Math.sin(ph) * Math.cos(th); arr[i * 3 + 1] = r * Math.cos(ph); arr[i * 3 + 2] = r * Math.sin(ph) * Math.sin(th); }
+const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(arr, 3));
+const dust = new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xd4b37a, size: .025, transparent: true, opacity: .7, depthWrite: false, blending: THREE.AdditiveBlending }));
+scene.add(dust);
+
+// Post-processing
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(1, 1), .55, .6, .82));
+composer.addPass(new OutputPass());
+
+// ----- Responsive resize: ปรับขนาด + ระยะกล้องตามสัดส่วนของกล่อง -----
+let lastFit = 1;
+const fitFactor = a => Math.max(1, 1.15 / a);
+function resize() {
+  const w = holder.clientWidth, h = holder.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false); composer.setSize(w, h);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+  const f = fitFactor(camera.aspect);
+  const v = camera.position.clone().sub(controls.target);
+  v.setLength(v.length() * f / lastFit);
+  camera.position.copy(controls.target).add(v);
+  controls.minDistance = 3 * f; controls.maxDistance = 14 * f;
+  lastFit = f;
+}
+new ResizeObserver(resize).observe(holder); resize();
+
+// ----- UI: chips + hotspots -----
+const chips = document.getElementById('chips'), hsWrap = document.getElementById('hotspots'), infoBody = document.getElementById('info-body');
+const peek = document.getElementById('peek'), peekName = document.getElementById('peek-name');
+const defaultInfo = infoBody.innerHTML, hs = {}, chipEls = {};
+Object.keys(DATA).forEach(k => {
+  const c = document.createElement('button'); c.className = 'chip'; c.textContent = DATA[k].no + ' · ' + DATA[k].name.split(' ')[0]; c.onclick = () => select(k, true); chips.appendChild(c); chipEls[k] = c;
+  const h = document.createElement('button'); h.className = 'hs'; h.setAttribute('aria-label', DATA[k].name); h.innerHTML = `<span>${DATA[k].no}</span><em>${DATA[k].name}</em>`; h.onclick = () => select(k); hsWrap.appendChild(h); hs[k] = h;
+});
+
+let mode = 'assembled', explodeT = 0, explode = 0, shellT = .96, shellO = .96, wireT = 0, wireO = 0, current = null, selMats = [];
+function setMode(m) {
+  mode = m; explodeT = m === 'exploded' ? 1 : 0;
+  shellT = m === 'assembled' ? .96 : m === 'xray' ? .14 : .05;
+  wireT = m === 'xray' ? .22 : m === 'exploded' ? .06 : 0;
+  document.querySelectorAll('#modes button').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+  viewer.classList.toggle('show-hs', m !== 'assembled');
+}
+document.querySelectorAll('#modes button').forEach(b => b.onclick = () => setMode(b.dataset.mode));
+
+function setHighlight(k) {
+  Object.values(comps).forEach(g => g.traverse(o => { if (o.isMesh) { o.material.emissive.copy(o.material.userData.e0); o.material.emissiveIntensity = o.material.userData.i0; } }));
+  selMats = [];
+  if (!k) return;
+  comps[k].traverse(o => { if (o.isMesh) { selMats.push(o.material); o.material.emissive.set(DATA[k].color); } });
+}
+function select(k, fromChip) {
+  current = k;
+  if (mode === 'assembled') setMode('exploded');
+  setHighlight(k); controls.autoRotate = false;
+  Object.keys(DATA).forEach(x => { chipEls[x].classList.toggle('active', x === k); hs[x].classList.toggle('active', x === k); });
+  chipEls[k].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  const d = DATA[k], hex = '#' + d.color.toString(16).padStart(6, '0');
+  infoBody.style.setProperty('--accent', hex);
+  infoBody.innerHTML = `<div class="i-no">COMPONENT ${d.no} / 07</div><h3>${d.name}</h3><div class="i-th">${d.th}</div><p>${d.desc}</p>
+    <h4>กระบวนการ</h4><ol class="steps">${d.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+    <h4>สเปก</h4><div class="specs">${d.specs.map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('')}</div>`;
+  infoBody.classList.remove('fade'); void infoBody.offsetWidth; infoBody.classList.add('fade');
+  // จอเล็ก: แสดงป้ายลัดให้เลื่อนลงไปอ่านรายละเอียด
+  peekName.textContent = d.no + ' · ' + d.name;
+  peek.classList.toggle('show', singleCol.matches && !fromChip);
+}
+function deselect() {
+  current = null; setHighlight(null); controls.autoRotate = !REDUCE;
+  Object.keys(DATA).forEach(x => { chipEls[x].classList.remove('active'); hs[x].classList.remove('active'); });
+  infoBody.style.removeProperty('--accent'); infoBody.innerHTML = defaultInfo;
+  peek.classList.remove('show');
+}
+document.getElementById('info-reset').onclick = deselect;
+peek.onclick = () => { peek.classList.remove('show'); document.getElementById('info').scrollIntoView({ behavior: REDUCE ? 'auto' : 'smooth', block: 'start' }); };
+
+// ----- Zoom buttons -----
+function zoom(f) {
+  const v = camera.position.clone().sub(controls.target);
+  v.setLength(THREE.MathUtils.clamp(v.length() * f, controls.minDistance, controls.maxDistance));
+  camera.position.copy(controls.target).add(v);
+}
+document.getElementById('zin').onclick = () => zoom(.82);
+document.getElementById('zout').onclick = () => zoom(1.2);
+document.getElementById('zreset').onclick = () => {
+  deselect(); setMode('assembled'); controls.target.set(0, 0, 0);
+  camera.position.copy(BASE_DIR).setLength(BASE_LEN * lastFit);
+};
+
+// ----- Touch gate: มือถือ ต้องแตะเปิดก่อนถึงจะหมุนโมเดลได้ จะได้เลื่อนหน้าเว็บผ่านโมเดลได้ปกติ -----
+const gate = document.getElementById('touch-gate');
+function setInteract(on) {
+  controls.enabled = on;
+  renderer.domElement.style.touchAction = on ? 'none' : 'pan-y';
+  viewer.classList.toggle('interacting', on);
+  gate.textContent = on ? '✓ เสร็จ · กลับไปเลื่อนหน้า' : '✋ แตะเพื่อหมุน / ซูมโมเดล';
+}
+if (IS_TOUCH) { setInteract(false); gate.onclick = () => setInteract(!controls.enabled); }
+else { gate.remove(); }
+
+// ----- Raycast click/tap -----
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(); let down = null;
+const compMeshes = []; Object.values(comps).forEach(g => g.traverse(o => o.isMesh && compMeshes.push(o)));
+renderer.domElement.addEventListener('pointerdown', e => down = [e.clientX, e.clientY]);
+renderer.domElement.addEventListener('pointerup', e => {
+  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > (IS_TOUCH ? 10 : 5)) return;
+  const r = renderer.domElement.getBoundingClientRect();
+  mouse.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(mouse, camera);
+  const hits = ray.intersectObjects(mode === 'assembled' ? [...compMeshes, ...shellMeshes] : compMeshes, false);
+  if (!hits.length) return;
+  let o = hits[0].object; while (o && !o.userData.key) o = o.parent;
+  if (o) select(o.userData.key); else if (mode === 'assembled') setMode('xray');
+});
+
+// ----- Render loop (หยุดเรนเดอร์เมื่อเลื่อนพ้นจอ เพื่อประหยัดแบต) -----
+let visible = true, first = true;
+new IntersectionObserver(e => {
+  visible = e[0].isIntersecting;
+  if (!visible && IS_TOUCH) { setInteract(false); peek.classList.remove('show'); }
+}).observe(viewer);
+const clock = new THREE.Clock(), tmp = new THREE.Vector3(), origin = new THREE.Vector3();
+const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+
+function tick() {
+  requestAnimationFrame(tick);
+  const dt = Math.min(clock.getDelta(), .05), t = clock.elapsedTime;
+  if ((!visible || document.hidden) && !first) return;
+  explode += (explodeT - explode) * Math.min(1, dt * 3.2);
+  shellO += (shellT - shellO) * Math.min(1, dt * 4);
+  wireO += (wireT - wireO) * Math.min(1, dt * 4);
+  shellMats.forEach(m => { m.opacity = shellO; m.depthWrite = shellO > .5; });
+  wireMat.opacity = wireO;
+  const e = ease(Math.max(0, Math.min(1, explode)));
+  Object.values(comps).forEach(g => g.position.copy(g.userData.offset).multiplyScalar(e));
+  selMats.forEach(m => m.emissiveIntensity = Math.max(m.userData.i0, .35 + .25 * Math.sin(t * 4)));
+
+  const motion = REDUCE ? 0 : 1;
+  pivot.position.y = Math.sin(t * .8) * .06 * motion;
+  rings.forEach((r, i) => { r.rotation.z += dt * .15 * (i + 1) * (i % 2 ? -1 : 1) * motion; r.material.opacity = .2 + .15 * Math.sin(t * 1.2 + i); });
+  dial.rotation.y += dt * .05 * motion; dust.rotation.y += dt * .01 * motion;
+
+  const desired = current ? worldAnchor(current).multiplyScalar(.55) : origin;
+  controls.target.lerp(desired, Math.min(1, dt * 3));
+  controls.update();
+
+  const w = holder.clientWidth, h = holder.clientHeight;
+  Object.keys(comps).forEach(k => {
+    tmp.copy(worldAnchor(k)).project(camera);
+    hs[k].style.transform = `translate(${(tmp.x * .5 + .5) * w}px,${(-tmp.y * .5 + .5) * h}px)`;
+    hs[k].style.opacity = (mode !== 'assembled' && tmp.z < 1) ? 1 : 0;
+  });
+
+  composer.render();
+  if (first) { first = false; document.getElementById('loading').style.opacity = 0; }
+}
+tick();
+</script>
+</body>
+</html>
