@@ -391,6 +391,129 @@ footer p{color:var(--muted);font-size:13px;margin-top:14px}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   .reveal{opacity:1;transform:none}
 }
+
+
+@media(min-width:1081px) and (max-width:1320px){.nav-links{gap:16px;font-size:12px;letter-spacing:.08em}}
+body.menu-open .mnav a:nth-child(6){transition-delay:.25s}
+body.menu-open .mnav a:nth-child(7){transition-delay:.3s}
+.sub-h{font-family:'Cinzel','Noto Sans Thai';font-weight:600;font-size:clamp(19px,2vw,24px);margin:clamp(50px,6vw,80px) 0 6px;letter-spacing:.03em}
+.sub-p{color:var(--muted);font-size:14.5px;max-width:760px;margin-bottom:22px}
+
+/* Evidence cards */
+.ev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:clamp(36px,4.5vw,56px)}
+.ev{padding:24px;display:flex;flex-direction:column}
+.ev .for{align-self:flex-start;font-size:11px;letter-spacing:.04em;padding:4px 10px;border-radius:999px;border:1px solid rgba(110,231,255,.35);color:var(--cyan);margin-bottom:14px}
+.ev .yr{font-family:'Cinzel';font-size:10.5px;letter-spacing:.22em;color:var(--gold)}
+.ev h4{font-family:'Cinzel','Noto Sans Thai';font-size:17px;font-weight:600;margin:4px 0 8px;line-height:1.4}
+.ev p{font-size:13.5px;color:#bdbbd0}
+.ev ul{list-style:none;margin:10px 0 0;display:grid;gap:6px}
+.ev li{font-size:13px;color:#cfcde0;padding-left:16px;position:relative;line-height:1.55}
+.ev li::before{content:'✦';position:absolute;left:0;top:4px;color:var(--gold);font-size:9px}
+.ev .src{margin-top:auto;padding-top:16px;display:flex;flex-wrap:wrap;gap:6px}
+.ev .src a{font-size:11.5px;padding:5px 10px;min-height:30px;display:inline-flex;align-items:center;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--gold2);transition:.25s}
+@media(hover:hover){.ev .src a:hover{border-color:var(--gold);background:rgba(212,179,122,.1)}}
+.ev.counter{border-color:rgba(255,107,139,.25)}
+.ev.counter .for{color:var(--rose);border-color:rgba(255,107,139,.4)}
+
+/* TRL meter */
+
+.trl{padding:clamp(20px,2.6vw,30px);margin-top:22px}
+.trl-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 60px;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.trl-row:last-of-type{border-bottom:0}
+.trl-row b{font-weight:500;font-size:14.5px;display:block}
+.trl-row small{color:var(--muted);font-size:12.5px;display:block;line-height:1.5}
+.trl-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.trl-bar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--cyan),var(--gold));transition:width 1.6s cubic-bezier(.2,.7,.2,1) .2s}
+.reveal.in .trl-bar i{width:var(--w)}
+.trl-row .lvl{font-family:'Cinzel';color:var(--gold2);text-align:right;font-size:15px}
+.trl-legend{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:14px;font-size:12px;color:var(--muted)}
+
+
+/* Revenue streams */
+.streams{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:clamp(36px,4.5vw,56px)}
+.stream{padding:26px 22px;display:flex;flex-direction:column}
+.stream .numeral{font-size:34px}
+.stream h4{font-family:'Cinzel','Noto Sans Thai';font-size:17px;font-weight:600;margin:14px 0 2px;line-height:1.35}
+.stream .who{font-size:12.5px;color:var(--cyan);margin-bottom:10px;line-height:1.5}
+.stream p{font-size:13.5px;color:var(--muted);margin-bottom:16px}
+.stream .price{margin-top:auto;padding-top:14px;border-top:1px solid rgba(255,255,255,.06)}
+.stream .price b{font-family:'Cinzel';font-size:20px;color:var(--gold2);font-weight:600;display:block;line-height:1.3}
+.stream .price span{font-size:12px;color:var(--muted)}
+.assume{margin-top:14px;font-size:12.5px;color:var(--muted)}
+
+
+/* Revenue mix */
+.mix{padding:clamp(20px,2.6vw,30px);margin-top:22px}
+.mix-row{display:grid;grid-template-columns:70px 1fr;gap:14px;align-items:center;margin:14px 0}
+.mix-row .y{font-family:'Cinzel';font-size:13px;color:var(--gold2)}
+.mix-bar{display:flex;height:30px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.04)}
+.mix-bar i{display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:600;color:#0b0b10;width:0;white-space:nowrap;overflow:hidden;transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
+.reveal.in .mix-bar i{width:var(--w)}
+.c1{background:var(--gold)}.c2{background:var(--cyan)}.c3{background:var(--violet)}.c4{background:var(--green)}
+.mix-legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:#cfcde0;margin-top:8px}
+.mix-legend span::before{content:'';display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;background:var(--c);vertical-align:-1px}
+
+/* Flywheel */
+.fly{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:22px}
+.fly>div{padding:22px;position:relative}
+.fly>div::after{content:'→';position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:16px;z-index:1}
+.fly>div:last-child::after{content:'↺'}
+.fly .n{font-family:'Cinzel';font-size:11px;letter-spacing:.25em;color:var(--gold)}
+.fly h5{font-size:15px;font-weight:600;margin:4px 0 6px;color:var(--gold2)}
+.fly p{font-size:13px;color:var(--muted)}
+
+
+/* Business Model Canvas */
+.bmc{display:grid;grid-template-columns:repeat(10,1fr);gap:10px;margin-top:22px;
+  grid-template-areas:"kp kp ka ka vp vp cr cr cs cs" "kp kp kr kr vp vp ch ch cs cs" "co co co co co rs rs rs rs rs"}
+.bmc>div{padding:18px}
+.bmc h6{font-family:'Cinzel','Noto Sans Thai';font-size:11px;letter-spacing:.18em;color:var(--gold);margin-bottom:8px;font-weight:600}
+.bmc ul{list-style:none;display:grid;gap:5px}
+.bmc li{font-size:12.5px;color:#cfcde0;line-height:1.5}
+.bmc .vp{background:linear-gradient(160deg,rgba(212,179,122,.13),rgba(255,255,255,.01));border-color:rgba(212,179,122,.3)}
+.kp{grid-area:kp}.ka{grid-area:ka}.kr{grid-area:kr}.vp{grid-area:vp}.cr{grid-area:cr}.ch{grid-area:ch}.cs{grid-area:cs}.co{grid-area:co}.rs{grid-area:rs}
+
+/* Roadmap */
+.road{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:26px;position:relative}
+.road::before{content:'';position:absolute;left:0;right:0;top:9px;height:1px;background:linear-gradient(90deg,var(--gold),var(--cyan),transparent)}
+.ph{padding-top:34px;position:relative}
+.ph::before{content:'';position:absolute;top:3px;left:0;width:13px;height:13px;border-radius:50%;background:var(--bg);border:1px solid var(--gold);box-shadow:0 0 12px rgba(212,179,122,.5)}
+.ph .t{font-family:'Cinzel';font-size:11px;letter-spacing:.2em;color:var(--gold)}
+.ph h5{font-size:15.5px;font-weight:600;margin:4px 0 8px}
+.ph ul{list-style:none;display:grid;gap:5px}
+.ph li{font-size:13px;color:var(--muted);padding-left:14px;position:relative;line-height:1.55}
+.ph li::before{content:'·';position:absolute;left:2px;color:var(--gold)}
+
+
+/* Closing pitch */
+.pitch{margin-top:clamp(60px,8vw,100px);padding:clamp(30px,5vw,60px);text-align:center}
+.pitch q{display:block;quotes:none;font-family:'Cinzel','Noto Sans Thai';font-weight:600;font-size:clamp(20px,2.8vw,34px);line-height:1.55;
+  background:linear-gradient(180deg,#fff,#b9a37d);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pitch p{color:var(--muted);margin-top:16px;font-size:14px;letter-spacing:.1em}
+
+
+/* Responsive */
+@media(max-width:1080px){
+  .ev-grid,.streams,.fly{grid-template-columns:1fr 1fr}
+  .fly>div::after{display:none}
+  .bmc{grid-template-columns:1fr 1fr;grid-template-areas:"vp vp" "cs cr" "ch rs" "kp ka" "kr co"}
+  .road{grid-template-columns:1fr 1fr;row-gap:30px}
+  .road::before{display:none}
+}
+
+@media(max-width:560px){
+  .ev-grid,.streams,.fly,.road{grid-template-columns:1fr}
+  .bmc{grid-template-columns:1fr;grid-template-areas:"vp" "cs" "cr" "ch" "rs" "kp" "ka" "kr" "co"}
+  .trl-row{grid-template-columns:1fr 48px;gap:8px 12px}
+  .trl-row>div:first-child{grid-column:1;grid-row:1}
+  .trl-row .lvl{grid-column:2;grid-row:1}
+  .trl-row .trl-bar{grid-column:1/-1;grid-row:2}
+  .mix-row{grid-template-columns:1fr;gap:6px}
+  .road{padding-left:24px}
+  .road::before{display:block;left:6px;right:auto;top:0;bottom:0;width:1px;height:auto;background:linear-gradient(var(--gold),var(--cyan),transparent)}
+  .ph{padding-top:0}
+  .ph::before{left:-24px}
+}
 </style>
 </head>
 <body>
@@ -703,7 +826,219 @@ footer p{color:var(--muted);font-size:13px;margin-top:14px}
     <div class="disclaimer glass reveal">หมายเหตุ: Sonova เป็นแนวคิดนวัตกรรม (Concept Presentation) ตัวเลขสเปกเป็นค่าเป้าหมายเชิงออกแบบ ผลของคลื่น Binaural ต่อแต่ละบุคคลยังมีงานวิจัยที่หลากหลาย อุปกรณ์นี้มุ่งเน้นด้านความผ่อนคลายและสุขภาวะ (Wellness) ไม่ใช่เครื่องมือแพทย์สำหรับวินิจฉัยหรือรักษาโรค</div>
   </div>
 </section>
+<a href="#research">RESEARCH</a><a href="#business">BUSINESS</a>
+<a href="#research">RESEARCH<small>หลักฐานความเป็นไปได้</small></a>
+<a href="#business">BUSINESS<small>โมเดลธุรกิจ</small></a>
+<div class="divider"></div>
 
+<!-- ================= RESEARCH / PROOF OF POSSIBILITY ================= -->
+<section id="research" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="kicker">Proof of Possibility</div>
+      <h2 class="title">ไม่ใช่นิยายวิทยาศาสตร์ เทคโนโลยีนี้มีอยู่จริงแล้ว</h2>
+      <p class="lead">ทุกชิ้นส่วนสำคัญของ Sonova มีหลักฐานรองรับ ทั้งผลิตภัณฑ์ที่วางขายแล้ว สิทธิบัตรของบริษัทเทคโนโลยีระดับโลก และงานวิจัยที่ตีพิมพ์แล้ว Sonova นำสิ่งเหล่านี้มารวมเป็นระบบเดียว ที่ตรวจจับ ยืนยัน และบำบัดความเครียดได้ในตัว</p>
+    </div>
+
+    <div class="ev-grid">
+      <article class="ev glass ornate reveal">
+        <span class="for">รองรับ: Neuro-Tip 6 ขั้ว + Closed-loop Sound</span>
+        <div class="yr">COMMERCIAL · NEXTSENSE</div>
+        <h4>หูฟัง EEG แบบเอียร์บัดวางขายจริงแล้ว</h4>
+        <p>NextSense Smartbuds ใส่เซนเซอร์ EEG แบบแห้ง 6 จุดไว้ในเอียร์บัด ไม่ต้องใช้เจล</p>
+        <ul>
+          <li>ตรวจระยะการนอนแบบเรียลไทม์ แล้วปล่อยเสียงพัลส์เบาๆ ให้หลับลึกขึ้น ใช้หลักวงจรปิด EEG → เสียง แบบเดียวกับ Sonova</li>
+          <li>มีงานวิจัยตีพิมพ์ใน Bioelectronic Medicine ที่เทียบผลกับ EEG ซึ่งฝังในสมอง ตรวจพบอาการชักเฉพาะที่ได้ราว 86% จากข้อมูลกว่า 1,255 ชั่วโมงในผู้ป่วย 20 คน</li>
+          <li>วางขายในราคาราว $349</li>
+        </ul>
+        <div class="src">
+          <a href="https://nextsense.io/products/smartbuds" target="_blank" rel="noopener">nextsense.io · Smartbuds ↗</a>
+          <a href="https://nextsense.io/" target="_blank" rel="noopener">nextsense.io ↗</a>
+        </div>
+      </article>
+      <article class="ev glass ornate reveal">
+        <span class="for">รองรับ: Ear-EEG ตรวจจับความเครียด</span>
+        <div class="yr">CES 2025 · IDUN × ANALOG DEVICES</div>
+        <h4>เอียร์บัดอ่านคลื่นสมองเพื่อจับความเครียด</h4>
+        <p>IDUN Technologies จากสวิตเซอร์แลนด์ร่วมกับ Analog Devices ผู้ผลิตชิปรายใหญ่ เปิดตัวต้นแบบเอียร์บัดวัดคลื่นสมองรุ่นที่ 4 ที่งาน CES 2025</p>
+        <ul>
+          <li>ระบุการใช้งานตรวจรูปแบบความเครียด ความวิตกกังวล และอารมณ์ พร้อมฟีดแบ็กแบบเรียลไทม์</li>
+          <li>รุ่นใหม่ประมวลผลเสียงได้ในเอียร์บัดตัวเดียว เหมือนแนวคิดของ Sonova</li>
+          <li>ข้อจำกัดที่ IDUN ยอมรับเอง: EEG ในหูได้ข้อมูลเชิงพื้นที่น้อยกว่าการวัดทั้งศีรษะ</li>
+        </ul>
+        <div class="src">
+          <a href="https://www.analog.com/en/signals/articles/idun-in-ear-eeg.html" target="_blank" rel="noopener">analog.com ↗</a>
+          <a href="https://audioxpress.com/news/idun-technologies-and-analog-devices-join-efforts-to-unveil-brain-sensing-earbuds-at-ces-2025" target="_blank" rel="noopener">audioxpress ↗</a>
+          <a href="https://iduntechnologies.com/idun-guardian" target="_blank" rel="noopener">IDUN ↗</a>
+        </div>
+      </article>
+      <article class="ev glass ornate reveal">
+        <span class="for">รองรับ: AI วิเคราะห์คลื่นสมอง + ANC</span>
+        <div class="yr">2024 · NEURABLE × MASTER &amp; DYNAMIC</div>
+        <h4>หูฟังตัดเสียงรบกวนที่ติดเซนเซอร์ EEG</h4>
+        <p>MW75 Neuro ฝังเซนเซอร์ EEG ไว้ในฟองน้ำครอบหู และใช้ AI วิเคราะห์ระดับสมาธิแบบเรียลไทม์ ควบคู่กับระบบตัดเสียงรบกวน</p>
+        <ul>
+          <li>พิสูจน์ว่าหูฟังที่อ่านคลื่นสมองได้ วางขายเป็นสินค้าผู้บริโภคได้จริง</li>
+          <li>ปัจจุบันเลิกผลิตรุ่นนี้แล้ว และเปลี่ยนเป็น Neurable One ที่มีเซนเซอร์ EEG 12 จุด แสดงว่าตลาดนี้พัฒนาเร็วมาก</li>
+        </ul>
+        <div class="src">
+          <a href="https://www.masterdynamic.com/blogs/news-culture/introducing-the-mw75-neuro-smart-eeg-active-noise-cancelling-wireless-headphones-for-neurable-inc" target="_blank" rel="noopener">masterdynamic ↗</a>
+          <a href="https://www.neurable.com/products/mw75neuro" target="_blank" rel="noopener">neurable ↗</a>
+        </div>
+      </article>
+      <article class="ev glass ornate reveal">
+        <span class="for">รองรับ: ทิศทางของอุตสาหกรรม</span>
+        <div class="yr">PATENT · APPLE</div>
+        <h4>Apple จดสิทธิบัตร AirPods วัดคลื่นสมอง</h4>
+        <p>สิทธิบัตร "Biosignal Sensing Device Using Dynamic Selection of Electrodes" (US20230225659A1) อธิบายหูฟังที่เลือกขั้วไฟฟ้าอัตโนมัติเพื่อวัด EEG, EMG และ EOG</p>
+        <ul>
+          <li>การเลือกขั้วที่สัมผัสผิวได้ดีที่สุด สอดคล้องกับระบบตรวจคุณภาพการสัมผัสของ Neuro-Tip</li>
+          <li>AirPods Pro 3 มีเซนเซอร์ PPG วัดอัตราการเต้นของหัวใจแล้ว และ Apple มีงานวิจัยที่ใช้ชุดข้อมูล Ear-EEG</li>
+        </ul>
+        <div class="src">
+          <a href="https://www.pearlcohen.com/apple-patents-airpods-with-advanced-biosensors-for-health-monitoring/" target="_blank" rel="noopener">pearlcohen ↗</a>
+          <a href="https://9to5mac.com/2025/11/28/airpods-brain-signal-study-patent/" target="_blank" rel="noopener">9to5mac ↗</a>
+          <a href="https://www.neurofounders.co/articles/when-will-apple-release-eeg-airpods" target="_blank" rel="noopener">neurofounders ↗</a
+        </div>
+      </article>
+      <article class="ev glass ornate reveal">
+        <span class="for">รองรับ: Neuro Layer (Binaural Beats)</span>
+        <div class="yr">META-ANALYSIS · 2019</div
+        <h4>คลื่น Binaural มีผลต่อความวิตกกังวล</h4>
+        <p>งานวิเคราะห์อภิมาน (Meta-analysis) ของ Garcia-Argibay และคณะ รวบรวมงานวิจัย 22 ชิ้น เพื่อศึกษาผลของ Binaural Beats ต่อความจำ สมาธิ ความวิตกกังวล และความเจ็บปวด</p>
+        <ul>
+          <li>สรุปว่า Binaural Beats มีผลลดความวิตกกังวลและการรับรู้ความเจ็บปวด</li>
+          <li>ผลขึ้นกับความถี่ ระยะเวลาที่ฟัง และช่วงเวลาที่ฟัง จึงเป็นเหตุผลที่ Sonova ปรับคลื่นตามสภาวะจริงของผู้ฟัง</li>
+          <li>งานวิจัยที่อ้างถึงงานนี้ระบุว่า คลื่นช่วง Theta/Delta ลดความวิตกกังวลได้ในระดับกลางถึงสูง (Hedges' g ≈ 0.69)</li>
+        </ul>
+        <div class="src">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/30073406/" target="_blank" rel="noopener">PubMed ↗</a>
+          <a href="https://www.researchgate.net/publication/326784313_Efficacy_of_binaural_auditory_beats_in_cognition_anxiety_and_pain_perception_a_meta-analysis" target="_blank" rel="noopener">researchgate ↗</a>
+        </div>
+      </article>
+      <article class="ev glass ornate counter reveal">
+        <span class="for">ข้อโต้แย้งที่เรายอมรับ</span>
+        <div class="yr">LITERATURE REVIEW · 2024</div>
+        <h4>หลักฐานยังไม่สม่ำเสมอ</h4>
+        <p>บทความทบทวนวรรณกรรมปี 2024 ระบุว่า Binaural Beats อาจช่วยลดอาการซึมเศร้าและวิตกกังวลได้ในบางกรณี แต่ผลการวิจัยยังขัดแย้งกัน และต้องมีงานวิจัยที่เข้มงวดกว่านี้</p>
+        <ul>
+          <li>Sonova จึงไม่ถือว่าคลื่นได้ผลกับทุกคน แต่วัดผลจากสมองและหัวใจของผู้ฟังทุก 250 ms</li>
+          <li>ถ้าวิธีไหนไม่ช่วย ระบบจะเปลี่ยนวิธีทันที และจดจำว่าอะไรได้ผลกับผู้ฟังคนนั้น</li>
+        </ul>
+        <div class="src">
+          <a href="https://openpublichealthjournal.com/VOLUME/17/ELOCATOR/e18749445332258/FULLTEXT/" target="_blank" rel="noopener">openpublichealthjournal ↗</a>
+        </div>
+      </article>
+    </div>
+    <h3 class="sub-h reveal">ความพร้อมของเทคโนโลยี (Technology Readiness Level)</h3>
+    <p class="sub-p reveal">ระดับ TRL 1–9 บอกว่าเทคโนโลยีแต่ละส่วนใกล้ใช้งานจริงแค่ไหน ยิ่งสูงยิ่งพร้อม</p>
+    <div class="trl glass ornate reveal">
+      <div class="trl-row"><div><b>Ear-EEG แบบแห้งในเอียร์บัด</b><small>มีวางขายแล้ว (NextSense)</small></div><div class="trl-bar"><i style="--w:100%"></i></div><div class="lvl">9</div></div>
+      <div class="trl-row"><div><b>EEG → เสียง แบบวงจรปิด</b><small>มีผลิตภัณฑ์จริงสำหรับการนอน</small></div><div class="trl-bar"><i style="--w:89%"></i></div><div class="lvl">8</div></div>
+      <div class="trl-row"><div><b>AI แต่งเพลงผ่อนคลาย</b><small>มีโมเดลและแอปหลายราย แต่ยังไม่ได้ทำงานร่วมกับ EEG</small></div><div class="trl-bar"><i style="--w:78%"></i></div><div class="lvl">7</div></div>
+      <div class="trl-row"><div><b>ตรวจความเครียดจาก Ear-EEG</b><small>อยู่ในขั้นต้นแบบและผลิตภัณฑ์รุ่นแรก (IDUN, Neurable)</small></div><div class="trl-bar"><i style="--w:67%"></i></div><div class="lvl">6</div></div>
+      <div class="trl-row"><div><b>รวม EEG กับ HR/HRV เป็น Stress Index</b><small>ส่วนที่ Sonova ต้องพัฒนาเอง</small></div><div class="trl-bar"><i style="--w:44%"></i></div><div class="lvl">4</div></div>
+      <div class="trl-row"><div><b>ฝังคลื่นในเพลงลิขสิทธิ์ (Resonance)</b><small>ทำได้ทางเทคนิค แต่ต้องเจรจาลิขสิทธิ์</small></div><div class="trl-bar"><i style="--w:33%"></i></div><div class="lvl">3</div></div>
+      <div class="trl-legend"><span>TRL 1–3 · แนวคิดและวิจัย</span><span>TRL 4–6 · ต้นแบบ</span><span>TRL 7–9 · พร้อมใช้งานจริง</span><span>* ทีม Sonova ประเมินจากหลักฐานข้างต้น</span></div>
+    </div>
+    <h3 class="sub-h reveal">ความเสี่ยงที่เรายอมรับ และแผนรับมือ</h3>
+    <div class="fusion glass ornate reveal" style="margin-top:22px">
+      <table class="rtable">
+        <thead><tr><th>ความเสี่ยง</th><th>ระดับ</th><th>แผนรับมือ</th></tr></thead>
+        <tbody>
+          <tr><td>ลิขสิทธิ์เพลงในโหมด Resonance</td><td data-label="ระดับ"><span class="tag" style="color:var(--rose);border-color:var(--rose)">สูง</span></td><td data-label="แผนรับมือ">เริ่มจากเพลงใน Creator Marketplace ที่ศิลปินอนุญาตโดยตรง แล้วค่อยเจรจากับค่ายเพลงและบริการสตรีมมิง โหมด Resonance จะเปิดก็ต่อเมื่อได้รับอนุญาตแล้ว</td></tr>
+          <tr><td>ความเป็นส่วนตัวของข้อมูลสมอง</td><td data-label="ระดับ"><span class="tag" style="color:var(--rose);border-color:var(--rose)">สูง</span></td><td data-label="แผนรับมือ">ประมวลผลบนเครื่อง ไม่ส่งข้อมูลดิบขึ้นคลาวด์ ขอความยินยอมแยกตามการใช้งาน และปฏิบัติตาม PDPA เพราะนักวิชาการเคย<a href="https://www.luc.edu/neuroscienceandsociety/hottopics/essays/archive/areyousharingyourbrainwithapple.shtml" target="_blank" rel="noopener" style="color:var(--gold2)">ตั้งคำถามด้านจริยธรรม</a>ต่อหูฟังวัดคลื่นสมองมาแล้ว</td></tr>
+          <tr><td>ผลของคลื่นบำบัดต่างกันในแต่ละคน</td><td data-label="ระดับ"><span class="tag" style="color:#ffd27a;border-color:#ffd27a">กลาง</span></td><td data-label="แผนรับมือ">ใช้วงจรปิดวัดผลจริงทุกเซสชัน และทำ Pilot Study ร่วมกับมหาวิทยาลัยก่อนกล่าวอ้างสรรพคุณ</td></tr>
+          <tr><td>สัญญาณ Ear-EEG มีข้อจำกัด</td><td data-label="ระดับ"><span class="tag" style="color:#ffd27a;border-color:#ffd27a">กลาง</span></td><td data-label="แผนรับมือ">เน้นตัวชี้วัดที่วัดจากในหูได้ดี เช่น สัดส่วน β/α และยืนยันด้วยหัวใจกับการหายใจเสมอ ไม่ตัดสินจากสัญญาณเดียว</td></tr>
+          <tr><td>คู่แข่งรายใหญ่อย่าง Apple</td><td data-label="ระดับ"><span class="tag" style="color:#ffd27a;border-color:#ffd27a">กลาง</span></td><td data-label="แผนรับมือ">แข่งด้วย Sound Engine คลังเพลงบำบัด และชุมชนศิลปิน ซึ่งลอกได้ยากกว่าฮาร์ดแวร์ และยังเปิดโอกาสเป็นพาร์ตเนอร์ด้านซอฟต์แวร์ได้</td></tr>
+          <tr><td>กฎระเบียบอุปกรณ์การแพทย์</td><td data-label="ระดับ"><span class="tag" style="color:var(--green);border-color:var(--green)">ควบคุมได้</span></td><td data-label="แผนรับมือ">วางตำแหน่งเป็นอุปกรณ์ Wellness ไม่อ้างการวินิจฉัยหรือรักษาโรค ถ้าจะทำรุ่นการแพทย์ ต้องขออนุญาตจาก อย. แยกต่างหาก</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="disclaimer glass reveal">ข้อมูลอ้างอิงรวบรวมจากเว็บไซต์ทางการ ฐานข้อมูลงานวิจัย และสื่อเทคโนโลยี ณ วันที่จัดทำ ราคาและสถานะของผลิตภัณฑ์อาจเปลี่ยนได้ ควรเปิดลิงก์ตรวจสอบอีกครั้งก่อนนำเสนอ</div>
+  </div>
+</section>
+<div class="divider"></div>
+<!-- ================= BUSINESS MODEL ================= -->
+<section id="business" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="kicker">Business Model</div>
+      <h2 class="title">ไม่ใช่แค่หูฟัง แต่คือ Ecosystem ด้าน Mental Wellness</h2>
+      <p class="lead">Sonova ไม่ได้ขายเครื่องครั้งเดียวแล้วจบ แต่สร้างรายได้ 4 ทางที่เสริมกัน ฮาร์ดแวร์ช่วยให้เข้าถึงผู้ใช้ สมาชิกรายเดือนสร้างรายได้ต่อเนื่อง องค์กรช่วยเพิ่มผู้ใช้ทีละมาก ๆ และศิลปินช่วยเติมเพลงใหม่ให้คลังไม่ซ้ำเดิม</p>
+    </div>
+    <div class="streams">
+      <div class="stream glass ornate reveal">
+        <div class="numeral">I</div>
+        <h4>D2C Hardware Sale</h4>
+        <div class="who">คนทำงานอายุ 22–40 ปี ที่ใส่ใจสุขภาพและใช้ Apple Watch</div>
+        <p>ขาย Sonova One ผ่านเว็บไซต์ของแบรนด์และร้านไอทีชั้นนำ และมีรายได้ต่อเนื่องจากจุกหู Neuro-Tip ที่ต้องเปลี่ยนทุก 3–6 เดือน เหมือนหูฟัง EEG ในตลาดที่ต้องเปลี่ยนจุกเป็นประจำ</p>
+        <div class="price"><b>9,990 บาท</b><span>+ Neuro-Tip Refill 590 บาท / แพ็ก</span></div>
+      </div>
+      <div class="stream glass ornate reveal">
+        <div class="numeral">II</div>
+        <h4>Sanctum+ Subscription</h4>
+        <div class="who">ผู้ใช้ที่อยากได้ฟีเจอร์ครบ</div>
+        <p>ใช้ฟรีได้ทั้งการตรวจความเครียดและเซสชันพื้นฐาน อัปเกรดเพื่อใช้ Genesis ได้ไม่จำกัด รวมถึง Sleep Descent, Deep Focus และ Mind Journal รายสัปดาห์</p>
+        <div class="price"><b>149 บาท / เดือน</b><span>หรือ 1,490 บาท / ปี</span></div>
+      </div>
+      <div class="stream glass ornate reveal">
+        <div class="numeral">III</div>
+        <h4>Corporate Wellness</h4>
+        <div class="who">องค์กรที่เจอปัญหา Burnout และพนักงานลาออก</div>
+        <p>แพ็กเกจเช่าอุปกรณ์พร้อมสมาชิก และ Team Calm Dashboard ที่แสดงแนวโน้มความเครียดของทีมแบบภาพรวม แสดงเฉพาะกลุ่มที่มีอย่างน้อย 10 คน และ HR จะไม่เห็นข้อมูลรายบุคคล</p>
+        <div class="price"><b>390 บาท / คน / เดือน</b><span>รวมค่าเช่าเครื่อง · สัญญา 12 เดือน</span></div>
+      </div>
+      <div class="stream glass ornate reveal">
+        <div class="numeral">IV</div>
+        <h4>Creator Marketplace</h4>
+        <div class="who">ศิลปิน นักดนตรีบำบัด และนักทำเพลง Ambient</div>
+        <p>ศิลปินอัปโหลดเพลงแบบแยกแทร็กให้ AI นำไปผสมคลื่นบำบัด แล้วรับรายได้แบบ Pay-by-Calm Time คือจ่ายตามจำนวนนาทีที่คลื่นสมองยืนยันว่าผู้ฟังสงบหรือมีสมาธิได้จริง</p>
+        <div class="price"><b>70 / 30</b><span>ส่วนแบ่งรายได้ ศิลปิน / Sonova</span></div>
+      </div>
+    </div>
+    <p class="assume reveal">* ราคาและตัวเลขทั้งหมดเป็นสมมติฐานเพื่อการวางแผน ยังไม่ใช่ราคาขายจริง</p>
+    <h3 class="sub-h reveal">สัดส่วนรายได้ที่คาดการณ์</h3>
+    <p class="sub-p reveal">ช่วงแรกรายได้ส่วนใหญ่มาจากการขายเครื่อง จากนั้นจะค่อย ๆ เปลี่ยนเป็นรายได้ต่อเนื่อง ซึ่งมั่นคงกว่าและนักลงทุนให้มูลค่าสูงกว่า</p>
+    <div class="mix glass ornate reveal">
+      <div class="mix-row"><div class="y">YEAR 1</div><div class="mix-bar"><i class="c1" style="--w:80%">80%</i><i class="c2" style="--w:15%">15%</i><i class="c3" style="--w:5%"></i></div></div>
+      <div class="mix-row"><div class="y">YEAR 3</div><div class="mix-bar"><i class="c1" style="--w:50%">50%</i><i class="c2" style="--w:25%">25%</i><i class="c3" style="--w:18%">18%</i><i class="c4" style="--w:7%"></i></div></div>
+      <div class="mix-row"><div class="y">YEAR 5</div><div class="mix-bar"><i class="c1" style="--w:35%">35%</i><i class="c2" style="--w:30%">30%</i><i class="c3" style="--w:22%">22%</i><i class="c4" style="--w:13%">13%</i></div></div>
+      <div class="mix-legend"><span style="--c:var(--gold)">Hardware + Neuro-Tip</span><span style="--c:var(--cyan)">Sanctum+</span><span style="--c:var(--violet)">Corporate Wellness</span><span style="--c:var(--green)">Creator Marketplace</span></div>
+    </div>
+    <h3 class="sub-h reveal">Flywheel: ยิ่งมีคนใช้ ยิ่งได้ผล</h3>
+    <div class="fly">
+      <div class="glass reveal"><div class="n">01</div><h5>ผู้ใช้มากขึ้น</h5><p>ได้ข้อมูลผลลัพธ์แบบไม่ระบุตัวตนมากขึ้น ว่าเพลงแบบไหนช่วยให้คนสงบ</p></div>
+      <div class="glass reveal"><div class="n">02</div><h5>AI แม่นขึ้น</h5><p>ช่วยให้สงบเร็วขึ้น ผู้ใช้เห็นผลจริงจึงต่ออายุสมาชิก</p></div>
+      <div class="glass reveal"><div class="n">03</div><h5>ศิลปินมีรายได้</h5><p>ศิลปินเข้ามาลงเพลงมากขึ้น คลังเพลงจึงหลากหลายขึ้น</p></div>
+      <div class="glass reveal"><div class="n">04</div><h5>องค์กรเห็นผล</h5><p>ข้อมูลภาพรวมแสดงความคุ้มค่าด้านสุขภาวะ องค์กรจึงต่อสัญญาและนำผู้ใช้ใหม่เข้ามา</p></div>
+    </div>
+    <h3 class="sub-h reveal">Business Model Canvas</h3>
+    <div class="bmc reveal">
+      <div class="glass kp"><h6>KEY PARTNERS</h6><ul><li>ผู้ผลิตหูฟังแบบ ODM</li><li>ผู้ผลิตชิป AFE และ Biosensor</li><li>Apple HealthKit (ข้อมูลหัวใจ)</li><li>ค่ายเพลง ศิลปิน และนักดนตรีบำบัด</li><li>มหาวิทยาลัยและโรงพยาบาล</li></ul></div>
+      <div class="glass ka"><h6>KEY ACTIVITIES</h6><ul><li>พัฒนา Stress-Net และ Sound Engine</li><li>ผลิตและควบคุมคุณภาพ</li><li>ดูแลคลังเพลงและชุมชนศิลปิน</li><li>ทำวิจัยยืนยันผล</li></ul></div>
+      <div class="glass kr"><h6>KEY RESOURCES</h6><ul><li>สิทธิบัตรการผสมคลื่นแบบแนบเนียน</li><li>ชุดข้อมูล EEG + HRV ที่ได้รับความยินยอม</li><li>ทีม Neuro, Audio DSP และ AI</li></ul></div>
+      <div class="glass vp"><h6>VALUE PROPOSITION</h6><ul><li>ตรวจความเครียดจริงด้วยสองสัญญาณ</li><li>บำบัดผ่านเพลงที่อยากฟัง ไม่ใช่เสียงหึ่ง ๆ น่าเบื่อ</li><li>วัดผลได้ทุกเซสชัน</li><li>ข้อมูลสมองอยู่บนเครื่องของคุณ</li></ul></div>
+      <div class="glass cr"><h6>CUSTOMER RELATIONSHIPS</h6><ul><li>แอป Sanctum ที่ปรับตามแต่ละคน</li><li>รายงาน Mind Journal รายสัปดาห์</li><li>ทีมดูแลลูกค้าองค์กร</li></ul></div>
+      <div class="glass ch"><h6>CHANNELS</h6><ul><li>เว็บไซต์แบรนด์และ Crowdfunding</li><li>ร้านไอทีและ Apple Premium Reseller</li><li>ทีมขายองค์กรและพาร์ตเนอร์ HR Tech</li><li>Influencer สาย Wellness และ Productivity</li></ul></div>
+      <div class="glass cs"><h6>CUSTOMER SEGMENTS</h6><ul><li>คนทำงานที่มีความเครียดสะสม</li><li>นักศึกษาช่วงสอบ</li><li>ผู้ที่มีปัญหาการนอน</li><li>องค์กร (HR / People Team)</li></ul></div>
+      <div class="glass co"><h6>COST STRUCTURE</h6><ul><li>R&amp;D และงานวิจัยทางคลินิก</li><li>ต้นทุนการผลิตฮาร์ดแวร์</li><li>ค่าลิขสิทธิ์และส่วนแบ่งของศิลปิน</li><li>การตลาดและช่องทางขาย</li></ul></div>
+      <div class="glass rs"><h6>REVENUE STREAMS</h6><ul><li>ขายเครื่องและจุกหู Neuro-Tip</li><li>สมาชิก Sanctum+</li><li>สัญญา Corporate Wellness</li><li>ส่วนแบ่งจาก Creator Marketplace</li><li>(อนาคต) ค่าสิทธิ์ใช้เทคโนโลยีและงานวิจัยร่วม</li></ul></div>
+    </div>
+    <h3 class="sub-h reveal">Go-to-Market Roadmap</h3>
+    <div class="road reveal">
+      <div class="ph"><div class="t">PHASE 0 · เดือน 0–6</div><h5>Prototype &amp; Validate</h5><ul><li>สร้างต้นแบบจากบอร์ด EEG สำเร็จรูป</li><li>ทำ Pilot Study 30–50 คนร่วมกับมหาวิทยาลัย</li><li>ทดสอบโหมด Genesis</li></ul></div>
+      <div class="ph"><div class="t">PHASE 1 · เดือน 6–18</div><h5>Launch</h5><ul><li>เปิด Crowdfunding เพื่อทดสอบความต้องการของตลาด</li><li>ผลิตล็อตแรกและขายตรงถึงลูกค้า</li><li>เปิดสมาชิก Sanctum+</li></ul></div>
+      <div class="ph"><div class="t">PHASE 2 · เดือน 18–30</div><h5>Scale B2B</h5><ul><li>ทดลองใช้กับองค์กร 3–5 แห่ง</li><li>เปิดตัว Team Calm Dashboard</li><li>เปิด Creator Marketplace รุ่นเบต้า</li></ul></div>
+      <div class="ph"><div class="t">PHASE 3 · เดือน 30+</div><h5>Ecosystem</h5><ul><li>เจรจาลิขสิทธิ์เพื่อเปิดโหมด Resonance</li><li>ขยายตลาดในเอเชียตะวันออกเฉียงใต้</li><li>ทำวิจัยทางคลินิกเพื่อต่อยอด</li></ul></div>
+    </div>
+    <div class="pitch glass ornate reveal">
+      <div class="kicker" style="justify-content:center">Our Promise</div>
+      <q style="margin-top:18px">Sonova พร้อมเปลี่ยนการดูแลสุขภาพจิต ให้เป็นเรื่องง่าย วัดผลได้ และจับต้องได้จริง</q>
+      <p>THANK YOU · ขอบคุณครับ / ค่ะ</p>
+    </div>
+  </div>
+</section>
 <footer>
   <div class="big">SONOVA</div>
   <p>The Sound That Listens Back · Concept Presentation</p>
